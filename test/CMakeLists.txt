@@ -18,11 +18,7 @@ include(Catch)
 # ---- Tests ----
 
 add_executable(cmake-init-modules_test source/cmake-init-modules_test.cpp)
-target_link_libraries(
-    cmake-init-modules_test PRIVATE
-    cmake-init-modules::cmake-init-modules
-    Catch2::Catch2WithMain
-)
+target_link_libraries(cmake-init-modules_test PRIVATE cmake-init-modules::cmake-init-modules Catch2::Catch2WithMain)
 target_compile_features(cmake-init-modules_test PRIVATE cxx_std_20)
 
 catch_discover_tests(cmake-init-modules_test)
