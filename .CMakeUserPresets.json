@@ -12,8 +12,7 @@
       "inherits": [
         "dev-mode",
         "conan",
-        "clang-tidy",
-        "cppcheck"
+        "clang-tidy"
       ],
       "generator": "Ninja",
       "cacheVariables": {
@@ -50,6 +49,7 @@
       "binaryDir": "${sourceDir}/build/dev-win64",
       "inherits": [
         "dev-common",
+        "cppcheck",
         "ci-win64"
       ],
       "environment": {

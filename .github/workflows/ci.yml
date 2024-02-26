@@ -24,7 +24,7 @@ jobs:
       run: pip3 install codespell
 
     - name: Lint
-      run: cmake -D FORMAT_COMMAND=clang-format-14 -P cmake/lint.cmake
+      run: cmake -D FORMAT_COMMAND=clang-format-15 -P cmake/lint.cmake
 
     - name: Spell check
       if: always()
@@ -55,7 +55,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip3 install conan
+        pip3 install conan cmake ninja gcovr
         bash < .github/scripts/conan-profile.sh
         conan install . -b missing
 
@@ -82,7 +82,7 @@ jobs:
 
     runs-on: ubuntu-22.04
 
-    env: { CXX: clang++-14 }
+    env: { CXX: clang++-15 }
 
     steps:
     - uses: actions/checkout@v4
@@ -93,7 +93,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip3 install conan
+        pip3 install conan cmake ninja
         bash < .github/scripts/conan-profile.sh
         conan install . -b missing
 
@@ -121,7 +121,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        os: [macos-13, ubuntu-22.04, windows-2022]
+        os: [macos-14, ubuntu-22.04, windows-2022]
 
         type: [shared, static]
 
@@ -134,23 +134,35 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install static analyzers
-      if: matrix.os == 'ubuntu-22.04'
-      run: >-
-        sudo apt-get install clang-tidy-14 cppcheck -y -q
+    - name: Setup Cpp
+      if: matrix.os != 'windows-2022'
+      uses: aminya/setup-cpp@v1
+      with:
+        compiler: llvm-17.0.6
+        vcvarsall: ${{ contains(matrix.os, 'windows') }}
+        # conan: true
+        # vcpkg: true
+        clangformat: true
+        clangtidy: true
+        # ...
 
-        sudo update-alternatives --install
-        /usr/bin/clang-tidy clang-tidy
-        /usr/bin/clang-tidy-14 140
+    # - name: Install static analyzers
+    #   if: matrix.os == 'ubuntu-22.04'
+    #   run: >-
+    #     sudo apt-get install clang-tidy-15 cppcheck -y -q
+
+    #     sudo update-alternatives --install
+    #     /usr/bin/clang-tidy clang-tidy
+    #     /usr/bin/clang-tidy-15 140
 
     - name: Install Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with: { python-version: "3.10" }
 
     - name: Install dependencies
       shell: bash
       run: |
-        pip3 install conan
+        pip3 install conan cmake ninja gcovr
         bash < .github/scripts/conan-profile.sh
         conan install . -b missing
 
@@ -204,11 +216,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       with: { python-version: "3.10" }
 
     - name: Install m.css dependencies
-      run: pip3 install jinja2 Pygments
+      run: pip3 install jinja2 Pygments cmake ninja
 
     - name: Install Doxygen
       run: sudo apt-get update -q

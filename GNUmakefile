@@ -10,14 +10,14 @@ MAKEFLAGS+= --include-dir=$(CURDIR)/conan	# Search DIRECTORY for included makefi
 # export CC=gcc-13
 # export CXX=g++-13
 export CC=clang-17
-export CXX=clang++-17
+export CXX=$(shell which clang++)
 export CMAKE_EXPORT_COMPILE_COMMANDS=YES
 
 CONAN_HOME=$(shell conan config home)
 # BUILD_TYPE=Release
 BUILD_TYPE=Debug
 
-.PHONY: all clean distclean check format
+.PHONY: all clean distclean check format test
 
 all: conan
 	# TODO: if needed: cmake --preset dev --fresh --debug-find-pkg=fmt
@@ -25,16 +25,19 @@ all: conan
 	cmake --install build/dev --prefix $(CURDIR)/stagedir
 	# TODO: cpack --list-presets
 
-check:all
+test: all
+	cd example && cmake -B build -S . -G Ninja -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) \
+		-D 'CMAKE_PREFIX_PATH=$(CURDIR)/stagedir;$(CURDIR)/conan' \
+		--toolchain $(CURDIR)/conan/conan_toolchain.cmake --debug-find-pkg=fmt
+	ninja -C example/build
+	ninja -C example/build test
+
+check: test
 	-run-clang-tidy -p build/dev
 
 conan: conanfile.py GNUmakefile
 	conan profile detect -f
-	# test -e $(CONAN_HOME)/profiles/clang-17 || cp -n $(CONAN_HOME)/profiles/default $(CONAN_HOME)/profiles/clang-17
-	test -e $(CONAN_HOME)/profiles/${CC} || \
-	  perl -p -e 's/(compiler.cppstd)=.*$$/$$1=20/;' -e 's/(build_type)=.*$$/$$1=$(BUILD_TYPE)/;' \
-	    $(CONAN_HOME)/profiles/default > $(CONAN_HOME)/profiles/${CC}
-	conan install --profile ${CC} . -s build_type=$(BUILD_TYPE) -b missing
+	conan install . -s build_type=$(BUILD_TYPE) -s compiler.cppstd=20 -b missing
 
 clean:
 	rm -rf build
