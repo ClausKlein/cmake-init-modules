@@ -6,6 +6,7 @@ build/
 cmake-build-*/
 conan/
 prefix/
+stagedir/
 .clangd
 CMakeLists.txt.user
 CMakeUserPresets.json

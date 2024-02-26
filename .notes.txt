@@ -1,0 +1,26 @@
+bash-5.2$ cmake-init -s -p conan --std 20 --examples cmake-init-modules
+Initialized empty Git repository in /Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/cmake-init-modules/.git/
+
+The project is ready to be used with git. If you are using GitHub, you may
+push the project with the following commands from the project directory:
+
+    git add .
+    git commit -m "Initial commit"
+    git flow init -d
+    git remote add origin https://github.com/<your-account>/<repository>.git
+    git push -u origin master
+
+To get started with developing the project, make sure you read the generated
+HACKING.md and BUILDING.md files for how to build the project as a developer or
+as a user respectively. There are also some details you may want to fill in in
+the README.md, CONTRIBUTING.md and .github/workflows/ci.yml files.
+
+Now make sure you have at least CMake 3.20 installed for local development, to
+make use of all the nice Quality-of-Life improvements in newer releases:
+https://cmake.org/download/
+
+For more tips, like integration with package managers, please see the Wiki:
+https://github.com/friendlyanon/cmake-init/wiki
+
+You are all set. Have fun programming and create something awesome!
+bash-5.2$
