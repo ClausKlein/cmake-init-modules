@@ -1,8 +1,8 @@
 {
-  "version": 2,
+  "version": 6,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 14,
+    "minor": 25,
     "patch": 0
   },
   "configurePresets": [
@@ -91,7 +91,10 @@
       "name": "ci-linux",
       "generator": "Unix Makefiles",
       "hidden": true,
-      "inherits": ["flags-linux", "ci-std"],
+      "inherits": [
+        "flags-linux",
+        "ci-std"
+      ],
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
@@ -100,14 +103,20 @@
       "name": "ci-darwin",
       "generator": "Unix Makefiles",
       "hidden": true,
-      "inherits": ["flags-darwin", "ci-std"],
+      "inherits": [
+        "flags-darwin",
+        "ci-std"
+      ],
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
     },
     {
       "name": "ci-win64",
-      "inherits": ["flags-windows", "ci-std"],
+      "inherits": [
+        "flags-windows",
+        "ci-std"
+      ],
       "generator": "Visual Studio 17 2022",
       "architecture": "x64",
       "hidden": true
@@ -128,7 +137,11 @@
     },
     {
       "name": "ci-coverage",
-      "inherits": ["coverage-linux", "dev-mode", "conan"],
+      "inherits": [
+        "coverage-linux",
+        "dev-mode",
+        "conan"
+      ],
       "cacheVariables": {
         "COVERAGE_HTML_COMMAND": ""
       }
@@ -136,7 +149,11 @@
     {
       "name": "ci-sanitize",
       "binaryDir": "${sourceDir}/build/sanitize",
-      "inherits": ["ci-linux", "dev-mode", "conan"],
+      "inherits": [
+        "ci-linux",
+        "dev-mode",
+        "conan"
+      ],
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Sanitize",
         "CMAKE_CXX_FLAGS_SANITIZE": "-O2 -g -fsanitize=address,undefined -fno-omit-frame-pointer -fno-common",
@@ -146,19 +163,54 @@
     {
       "name": "ci-build",
       "binaryDir": "${sourceDir}/build",
-      "hidden": true
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Release;Debug;"
+      }
     },
     {
       "name": "ci-macos",
-      "inherits": ["ci-build", "ci-darwin", "dev-mode", "conan"]
+      "inherits": [
+        "ci-build",
+        "ci-darwin",
+        "dev-mode",
+        "conan"
+      ],
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
     },
     {
       "name": "ci-ubuntu",
-      "inherits": ["ci-build", "ci-linux", "clang-tidy", "conan", "cppcheck", "dev-mode"]
+      "inherits": [
+        "ci-build",
+        "ci-linux",
+        "clang-tidy",
+        "conan",
+        "cppcheck",
+        "dev-mode"
+      ],
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
     },
     {
       "name": "ci-windows",
-      "inherits": ["ci-build", "ci-win64", "dev-mode", "conan"]
+      "inherits": [
+        "ci-build",
+        "ci-win64",
+        "dev-mode",
+        "conan"
+      ],
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
     }
   ]
 }
