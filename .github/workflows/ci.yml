@@ -15,9 +15,9 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       with: { python-version: "3.10" }
 
     - name: Install codespell
@@ -43,14 +43,14 @@ jobs:
       && false
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Install LCov
       run: sudo apt-get update -q
         && sudo apt-get install lcov -q -y
 
     - name: Install Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with: { python-version: "3.10" }
 
     - name: Install dependencies
@@ -73,7 +73,7 @@ jobs:
       run: cmake --build build/coverage -t coverage
 
     - name: Submit to codecov.io
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         file: build/coverage/coverage.info
 
@@ -85,10 +85,10 @@ jobs:
     env: { CXX: clang++-14 }
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Install Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with: { python-version: "3.10" }
 
     - name: Install dependencies
@@ -118,6 +118,8 @@ jobs:
     needs: [lint]
 
     strategy:
+      fail-fast: false
+
       matrix:
         os: [macos-13, ubuntu-22.04, windows-2022]
 
@@ -130,7 +132,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Install static analyzers
       if: matrix.os == 'ubuntu-22.04'
@@ -200,7 +202,7 @@ jobs:
       && false
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: actions/setup-python@v4
       with: { python-version: "3.10" }
