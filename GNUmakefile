@@ -17,7 +17,7 @@ CONAN_HOME=$(shell conan config home)
 # BUILD_TYPE=Release
 BUILD_TYPE=Debug
 
-.PHONY: all clean distclean check format test
+.PHONY: all clean distclean check format test conan
 
 all: conan
 	# TODO: if needed: cmake --preset dev --fresh --debug-find-pkg=fmt

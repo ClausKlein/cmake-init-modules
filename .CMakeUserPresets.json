@@ -11,8 +11,7 @@
       "hidden": true,
       "inherits": [
         "dev-mode",
-        "conan",
-        "clang-tidy"
+        "conan"
       ],
       "generator": "Ninja",
       "cacheVariables": {
