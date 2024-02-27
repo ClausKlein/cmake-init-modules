@@ -9,8 +9,8 @@ MAKEFLAGS+= --include-dir=$(CURDIR)/conan	# Search DIRECTORY for included makefi
 
 # export CC=gcc-13
 # export CXX=g++-13
-export CC=clang-17
-export CXX=$(shell which clang++)
+export CC?=clang-17
+export CXX?=$(shell which clang++)
 export CMAKE_EXPORT_COMPILE_COMMANDS=YES
 
 CONAN_HOME=$(shell conan config home)

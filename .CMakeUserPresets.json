@@ -61,7 +61,7 @@
       "name": "dev",
       "binaryDir": "${sourceDir}/build/dev",
       "generator": "Ninja",
-      "inherits": "dev-darwin"
+      "inherits": "dev-linux"
     },
     {
       "name": "dev-coverage",

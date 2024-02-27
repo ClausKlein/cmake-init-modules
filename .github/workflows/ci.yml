@@ -121,7 +121,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        os: [macos-14, ubuntu-22.04, windows-2022]
+        os: [macos-13, ubuntu-22.04, windows-2022]
 
         type: [shared, static]
 
@@ -135,10 +135,10 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Setup Cpp
-      if: matrix.os != 'windows-2022'
+      if: matrix.os == 'ubuntu-22.04'
       uses: aminya/setup-cpp@v1
       with:
-        compiler: llvm-17.0.6
+        compiler: llvm-15
         vcvarsall: ${{ contains(matrix.os, 'windows') }}
         # conan: true
         # vcpkg: true
@@ -185,11 +185,17 @@ jobs:
       run: cmake --build build --config Release -j 2
 
     - name: Install
-      run: cmake --install build --config Release --prefix prefix
+      run: cmake --install build --config Release --prefix stagedir
 
     - name: Test
       working-directory: build
       run: ctest --output-on-failure --no-tests=error -C Release -j 2
+
+    - name: TestInstalledVersion
+      if: matrix.os == 'ubuntu-22.04'
+      run: |
+        ln -sf .CMakeUserPresets.json CMakeUserPresets.json
+        VERBOSE=1 BUILD_SHARED_LIBS=${{ matrix.shared }} gmake test
 
   docs:
     # Deploy docs only when builds succeed
