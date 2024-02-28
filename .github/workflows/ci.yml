@@ -188,6 +188,15 @@ jobs:
         ln -sf .CMakeUserPresets.json CMakeUserPresets.json
         VERBOSE=1 BUILD_SHARED_LIBS=${{ matrix.shared }} gmake test
 
+    - name: TestInstalledVersion
+      if: matrix.os == 'macos-14'
+      run: |
+        cmake -B example/build -S example -G Ninja -D CMAKE_BUILD_TYPE=Release \
+            -D 'CMAKE_PREFIX_PATH=$PWD/stagedir;$PWD/conan' \
+            --toolchain $PWD/conan/conan_toolchain.cmake
+        ninja -C example/build
+        ninja -C example/build test
+
   docs:
     # Deploy docs only when builds succeed
     needs: [sanitize, test]

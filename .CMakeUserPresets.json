@@ -66,8 +66,17 @@
       "binaryDir": "${sourceDir}/build/dev",
       "generator": "Ninja",
       "inherits": [
-        "dev-linux",
-        "coverage-linux"
+        "ci-coverage",
+        "dev-linux"
+      ]
+    },
+    {
+      "name": "dev-sanitize",
+      "binaryDir": "${sourceDir}/build/dev",
+      "generator": "Ninja",
+      "inherits": [
+        "ci-sanitize",
+        "dev-linux"
       ]
     }
   ],

@@ -4,6 +4,6 @@
 
 auto main() -> int
 {
-  std::cout << exported_class().name() << std::endl;
+  std::cout << exported_class().name() << "\n";
   return 0;
 }
