@@ -31,16 +31,17 @@ the project:
 
 ```json
 {
-  "version": 2,
+  "version": 6,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 14,
+    "minor": 28,
     "patch": 0
   },
   "configurePresets": [
     {
       "name": "dev",
       "binaryDir": "${sourceDir}/build/dev",
+      "generator": "Ninja",
       "inherits": ["dev-mode", "conan", "ci-<os>"],
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
@@ -63,6 +64,25 @@ the project:
         "outputOnFailure": true
       }
     }
+  ],
+  "workflowPresets": [
+    {
+      "name": "dev",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "dev"
+        },
+        {
+          "type": "build",
+          "name": "dev"
+        },
+        {
+          "type": "test",
+          "name": "dev"
+        }
+      ]
+    }
   ]
 }
 ```
@@ -72,9 +92,9 @@ the operating system you have, which may be `win64`, `linux` or `darwin`. You
 can see what these correspond to in the
 [`CMakePresets.json`](CMakePresets.json) file.
 
-`CMakeUserPresets.json` is also the perfect place in which you can put all
-sorts of things that you would otherwise want to pass to the configure command
-in the terminal.
+[`CMakeUserPresets.json`](.CMakeUserPresets.json) file is also the perfect place
+in which you can put all sorts of things that you would otherwise want to pass
+to the configure command in the terminal.
 
 > **Note**
 > Some editors are pretty greedy with how they open projects with presets.

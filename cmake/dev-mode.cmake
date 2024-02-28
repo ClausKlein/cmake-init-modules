@@ -1,6 +1,7 @@
 include(cmake/folders.cmake)
 
-include(CTest)
+# XXX include(CTest)
+option(BUILD_TESTING "" ${PROJECT_IS_TOP_LEVEL})
 if(BUILD_TESTING)
   add_subdirectory(test)
 endif()
