@@ -15,6 +15,7 @@
       ],
       "generator": "Ninja",
       "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true,
         "BUILD_MCSS_DOCS": false,
         "BUILD_SHARED_LIBS": true
       }
@@ -27,8 +28,7 @@
         "ci-linux"
       ],
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
@@ -39,8 +39,7 @@
         "ci-darwin"
       ],
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
@@ -64,12 +63,11 @@
     },
     {
       "name": "dev-coverage",
-      "binaryDir": "${sourceDir}/build/coverage",
+      "binaryDir": "${sourceDir}/build/dev",
       "generator": "Ninja",
       "inherits": [
-        "dev-mode",
-        "coverage-linux",
-        "conan"
+        "dev-linux",
+        "coverage-linux"
       ]
     }
   ],

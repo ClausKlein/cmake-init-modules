@@ -92,9 +92,9 @@ the operating system you have, which may be `win64`, `linux` or `darwin`. You
 can see what these correspond to in the
 [`CMakePresets.json`](CMakePresets.json) file.
 
-`CMakeUserPresets.json` is also the perfect place in which you can put all
-sorts of things that you would otherwise want to pass to the configure command
-in the terminal.
+[`CMakeUserPresets.json`](.CMakeUserPresets.json) file is also the perfect place
+in which you can put all sorts of things that you would otherwise want to pass
+to the configure command in the terminal.
 
 > **Note**
 > Some editors are pretty greedy with how they open projects with presets.
