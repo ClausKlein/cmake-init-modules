@@ -135,7 +135,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Setup Cpp
-      if: matrix.os == 'ubuntu-22.04'
+      if: matrix.os != 'windows-2022'
       uses: aminya/setup-cpp@v1
       with:
         compiler: llvm-15
