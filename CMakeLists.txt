@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.28...3.29)
 
 include(cmake/prelude.cmake)
 
@@ -9,7 +9,6 @@ project(
   HOMEPAGE_URL "https://example.com/"
   LANGUAGES CXX)
 
-include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
 
 # ---- Declare library ----
@@ -28,8 +27,6 @@ generate_export_header(
   CUSTOM_CONTENT_FROM_VARIABLE
   pragma_suppress_c4251)
 
-configure_file(include/cmake-init-modules/cmake-init-modules.hpp
-               export/cmake-init-modules/cmake-init-modules.hpp COPYONLY)
 
 # cmake-format: off
 target_sources(
@@ -37,8 +34,9 @@ target_sources(
   PUBLIC FILE_SET HEADERS
          BASE_DIRS
             ${PROJECT_BINARY_DIR}/export
+            ${PROJECT_SOURCE_DIR}/include
          FILES
-            ${PROJECT_BINARY_DIR}/export/cmake-init-modules/cmake-init-modules.hpp
+            include/cmake-init-modules/cmake-init-modules.hpp
             ${PROJECT_BINARY_DIR}/export/cmake-init-modules/cmake-init-modules_export.hpp
 )
 # cmake-format: on
@@ -56,12 +54,6 @@ set_target_properties(
              SOVERSION "${PROJECT_VERSION_MAJOR}"
              EXPORT_NAME cmake-init-modules
              OUTPUT_NAME cmake-init-modules)
-
-# target_include_directories( cmake-init-modules_cmake-init-modules
-# ${warning_guard} PUBLIC "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>" )
-#
-# target_include_directories( cmake-init-modules_cmake-init-modules SYSTEM
-# PUBLIC "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/export>" )
 
 target_compile_features(cmake-init-modules_cmake-init-modules PUBLIC cxx_std_20)
 

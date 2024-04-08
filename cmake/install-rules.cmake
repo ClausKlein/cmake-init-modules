@@ -10,21 +10,14 @@ include(GNUInstallDirs)
 # find_package(<package>) call for consumers to find this project
 set(package cmake-init-modules)
 
-# install(DIRECTORY include/ "${PROJECT_BINARY_DIR}/export/" DESTINATION
-# "${CMAKE_INSTALL_INCLUDEDIR}" COMPONENT cmake-init-modules_Development )
-
 # cmake-format: off
 install(TARGETS cmake-init-modules_cmake-init-modules
-        EXPORT cmake-init-modulesTargets
-        RUNTIME #
-                COMPONENT cmake-init-modules_Runtime
-        LIBRARY #
-                COMPONENT cmake-init-modules_Runtime NAMELINK_COMPONENT cmake-init-modules_Development
-        ARCHIVE #
-                COMPONENT cmake-init-modules_Development #
-        FILE_SET HEADERS #
-        INCLUDES #
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+  EXPORT cmake-init-modulesTargets
+  RUNTIME COMPONENT cmake-init-modules_Runtime
+  LIBRARY COMPONENT cmake-init-modules_Runtime NAMELINK_COMPONENT cmake-init-modules_Development
+  ARCHIVE COMPONENT cmake-init-modules_Development
+  INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+  FILE_SET HEADERS
 )
 # cmake-format: on
 
@@ -55,5 +48,6 @@ install(
   COMPONENT cmake-init-modules_Development)
 
 if(PROJECT_IS_TOP_LEVEL)
+  set(CPACK_GENERATOR TGZ)
   include(CPack)
 endif()
