@@ -24,6 +24,7 @@ target_sources(Algo
         FILES
             algo-interface.cppm
 )
+target_link_libraries(Algo PRIVATE fmt::fmt)
 
 # CMake requires the language standard to be specified as compile feature
 # when a target provides C++20 modules and the target will be installed
