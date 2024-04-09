@@ -1,6 +1,4 @@
-set(SPELL_COMMAND
-    codespell
-    CACHE STRING "Spell checker to use")
+set(SPELL_COMMAND codespell CACHE STRING "Spell checker to use")
 
 add_custom_target(
   spell-check
@@ -8,7 +6,8 @@ add_custom_target(
           "${PROJECT_SOURCE_DIR}/cmake/spell.cmake"
   WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
   COMMENT "Checking spelling"
-  VERBATIM)
+  VERBATIM
+)
 
 add_custom_target(
   spell-fix
@@ -16,4 +15,5 @@ add_custom_target(
           "${PROJECT_SOURCE_DIR}/cmake/spell.cmake"
   WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
   COMMENT "Fixing spelling errors"
-  VERBATIM)
+  VERBATIM
+)

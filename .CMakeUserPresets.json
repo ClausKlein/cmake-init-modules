@@ -14,6 +14,7 @@
         "conan"
       ],
       "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
         "CMAKE_EXPORT_COMPILE_COMMANDS": true,
         "BUILD_MCSS_DOCS": false,
@@ -21,8 +22,7 @@
       }
     },
     {
-      "name": "dev-linux",
-      "binaryDir": "${sourceDir}/build/dev-linux",
+      "name": "dev-Linux",
       "inherits": [
         "dev-common",
         "ci-linux"
@@ -32,8 +32,7 @@
       }
     },
     {
-      "name": "dev-darwin",
-      "binaryDir": "${sourceDir}/build/dev-darwin",
+      "name": "dev-Darwin",
       "inherits": [
         "dev-common",
         "ci-darwin"
@@ -44,7 +43,6 @@
     },
     {
       "name": "dev-win64",
-      "binaryDir": "${sourceDir}/build/dev-win64",
       "inherits": [
         "dev-common",
         "cppcheck",
@@ -57,26 +55,23 @@
     },
     {
       "name": "dev",
-      "binaryDir": "${sourceDir}/build/dev",
       "generator": "Ninja",
-      "inherits": "dev-linux"
+      "inherits": "dev-<hostSystemName>"
     },
     {
       "name": "dev-coverage",
-      "binaryDir": "${sourceDir}/build/dev",
       "generator": "Ninja",
       "inherits": [
         "ci-coverage",
-        "dev-linux"
+        "dev-Linux"
       ]
     },
     {
       "name": "dev-sanitize",
-      "binaryDir": "${sourceDir}/build/dev",
       "generator": "Ninja",
       "inherits": [
         "ci-sanitize",
-        "dev-linux"
+        "dev-Linux"
       ]
     }
   ],

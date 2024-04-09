@@ -1,7 +1,6 @@
 # Standard stuff
 
 .SUFFIXES:
-$(VERBOSE).SILENT:
 
 MAKEFLAGS+= --no-builtin-rules	# Disable the built-in implicit rules.
 # MAKEFLAGS+= --warn-undefined-variables	# Warn when an undefined variable is referenced.
@@ -13,14 +12,16 @@ export CC?=clang-17
 export CXX?=$(shell which clang++)
 export CMAKE_EXPORT_COMPILE_COMMANDS=YES
 
+export hostSystemName=$(shell uname)
+
 CONAN_HOME=$(shell conan config home)
 # BUILD_TYPE=Release
 BUILD_TYPE=Debug
 
-.PHONY: all clean distclean check format test conan
+.PHONY: all clean distclean check format test
 
-all: conan
-	cmake --workflow --preset dev --fresh
+all: .init conan
+	cmake --workflow --preset dev # XXX --fresh
 	cmake --install build/dev --prefix $(CURDIR)/stagedir
 
 test: all
@@ -33,6 +34,10 @@ test: all
 check: test
 	-run-clang-tidy -p build/dev
 
+.init: .CMakeUserPresets.json
+	perl -p -e 's/<hostSystemName>/${hostSystemName}/g;' .CMakeUserPresets.json > CMakeUserPresets.json
+	touch .init
+
 conan: conanfile.py GNUmakefile
 	conan profile detect -f
 	conan install . -s build_type=$(BUILD_TYPE) -s compiler.cppstd=20 -b missing
@@ -40,10 +45,15 @@ conan: conanfile.py GNUmakefile
 clean:
 	rm -rf build
 
-distclean:
-	rm -rf conan stagedir
+distclean: clean
+	rm -rf conan stagedir .init CMakeUserPresets.json
 	# XXX NO! git clean -xdf
 
-format:
+format: clean
 	find . -name CMakeLists.txt -o -name '*.cmake' | xargs cmake-format -i
 	git clang-format master
+
+# Anything we don't know how to build will use this rule.
+# The command is a do-nothing command.
+#
+% :: ;

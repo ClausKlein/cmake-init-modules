@@ -197,6 +197,10 @@
       ]
     },
     {
+      "name": "ci-Darwin",
+      "inherits": "ci-macos"
+    },
+    {
       "name": "ci-ubuntu",
       "inherits": [
         "ci-build",
@@ -207,6 +211,10 @@
       ]
     },
     {
+      "name": "ci-Linux",
+      "inherits": "ci-ubuntu"
+    },
+    {
       "name": "ci-windows",
       "inherits": [
         "ci-build",
@@ -214,6 +222,10 @@
         "dev-mode",
         "conan"
       ]
+    },
+    {
+      "name": "ci-Windows",
+      "inherits": "ci-windows"
     }
   ]
 }

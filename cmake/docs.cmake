@@ -12,16 +12,17 @@ FetchContent_Declare(
   URL_MD5 00cd2757ebafb9bcba7f5d399b3bec7f
   SOURCE_DIR "${PROJECT_BINARY_DIR}/mcss"
   UPDATE_DISCONNECTED YES
-  ${extract_timestamps})
+  ${extract_timestamps}
+)
 FetchContent_MakeAvailable(mcss)
 
 find_package(Python3 3.6 REQUIRED)
 
 # ---- Declare documentation target ----
 
-set(DOXYGEN_OUTPUT_DIRECTORY
-    "${PROJECT_BINARY_DIR}/docs"
-    CACHE PATH "Path for the generated Doxygen documentation")
+set(DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/docs"
+    CACHE PATH "Path for the generated Doxygen documentation"
+)
 
 set(working_dir "${PROJECT_BINARY_DIR}/docs")
 
@@ -34,9 +35,10 @@ set(config "${working_dir}/conf.py")
 
 add_custom_target(
   docs
-  COMMAND "${CMAKE_COMMAND}" -E remove_directory
-          "${DOXYGEN_OUTPUT_DIRECTORY}/html" "${DOXYGEN_OUTPUT_DIRECTORY}/xml"
+  COMMAND "${CMAKE_COMMAND}" -E remove_directory "${DOXYGEN_OUTPUT_DIRECTORY}/html"
+          "${DOXYGEN_OUTPUT_DIRECTORY}/xml"
   COMMAND "${Python3_EXECUTABLE}" "${mcss_script}" "${config}"
   COMMENT "Building documentation using Doxygen and m.css"
   WORKING_DIRECTORY "${working_dir}"
-  VERBATIM)
+  VERBATIM
+)

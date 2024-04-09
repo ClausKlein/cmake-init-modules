@@ -8,6 +8,7 @@ conan/
 prefix/
 stagedir/
 .clangd
+.init
 CMakeLists.txt.user
 CMakeUserPresets.json
 compile_commands.json
