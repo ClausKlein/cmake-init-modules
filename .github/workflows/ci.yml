@@ -24,7 +24,7 @@ jobs:
       run: pip3 install codespell
 
     - name: Lint
-      run: cmake -D FORMAT_COMMAND=clang-format-15 -P cmake/lint.cmake
+      run: cmake -D FORMAT_COMMAND=clang-format-17 -P cmake/lint.cmake
 
     - name: Spell check
       if: always()
@@ -34,6 +34,8 @@ jobs:
     needs: [lint]
 
     runs-on: ubuntu-22.04
+
+    env: { CXX: clang++-17 }
 
     # To enable coverage, delete the last line from the conditional below and
     # edit the "<name>" placeholder to your GitHub name.
@@ -52,6 +54,17 @@ jobs:
     - name: Install Python
       uses: actions/setup-python@v5
       with: { python-version: "3.10" }
+
+    - name: Setup Cpp
+      uses: aminya/setup-cpp@v1
+      with:
+        compiler: llvm-17
+        vcvarsall: ${{ contains(matrix.os, 'windows') }}
+        # conan: true
+        # vcpkg: true
+        clangformat: true
+        clangtidy: true
+        # ...
 
     - name: Install dependencies
       run: |
@@ -82,7 +95,7 @@ jobs:
 
     runs-on: ubuntu-22.04
 
-    env: { CXX: clang++-15 }
+    env: { CXX: clang++-17 }
 
     steps:
     - uses: actions/checkout@v4
@@ -90,6 +103,17 @@ jobs:
     - name: Install Python
       uses: actions/setup-python@v5
       with: { python-version: "3.10" }
+
+    - name: Setup Cpp
+      uses: aminya/setup-cpp@v1
+      with:
+        compiler: llvm-17
+        vcvarsall: ${{ contains(matrix.os, 'windows') }}
+        # conan: true
+        # vcpkg: true
+        clangformat: true
+        clangtidy: true
+        # ...
 
     - name: Install dependencies
       run: |
@@ -138,7 +162,7 @@ jobs:
       if: matrix.os != 'windows-2022'
       uses: aminya/setup-cpp@v1
       with:
-        compiler: llvm-15
+        compiler: llvm-17
         vcvarsall: ${{ contains(matrix.os, 'windows') }}
         # conan: true
         # vcpkg: true
