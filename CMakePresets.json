@@ -26,7 +26,7 @@
       "hidden": true,
       "inherits": "cmake-pedantic",
       "cacheVariables": {
-        "cmake-init-modules_DEVELOPER_MODE": "ON"
+        "cmake-init-modules_DEVELOPER_MODE": true
       }
     },
     {
@@ -57,9 +57,9 @@
       "description": "This preset makes sure the project actually builds with at least the specified standard",
       "hidden": true,
       "cacheVariables": {
-        "CMAKE_CXX_EXTENSIONS": "OFF",
+        "CMAKE_CXX_EXTENSIONS": false,
         "CMAKE_CXX_STANDARD": "20",
-        "CMAKE_CXX_STANDARD_REQUIRED": "ON"
+        "CMAKE_CXX_STANDARD_REQUIRED": true
       }
     },
     {
@@ -144,8 +144,8 @@
       "inherits": "ci-linux",
       "hidden": true,
       "cacheVariables": {
-        "ENABLE_COVERAGE": "ON",
-        "CMAKE_SKIP_INSTALL_RULES": "ON",
+        "ENABLE_COVERAGE": true,
+        "CMAKE_SKIP_INSTALL_RULES": true,
         "CMAKE_BUILD_TYPE": "Coverage",
         "CMAKE_CXX_FLAGS_COVERAGE": "-Og -g --coverage -fkeep-inline-functions -fkeep-static-functions",
         "CMAKE_EXE_LINKER_FLAGS_COVERAGE": "--coverage",
@@ -173,7 +173,7 @@
         "conan"
       ],
       "cacheVariables": {
-        "CMAKE_SKIP_INSTALL_RULES": "ON",
+        "CMAKE_SKIP_INSTALL_RULES": true,
         "CMAKE_BUILD_TYPE": "Sanitize",
         "CMAKE_CXX_FLAGS_SANITIZE": "-O2 -g -fsanitize=address,undefined -fno-omit-frame-pointer -fno-common",
         "CMAKE_MAP_IMPORTED_CONFIG_SANITIZE": "Sanitize;RelWithDebInfo;Release;Debug"

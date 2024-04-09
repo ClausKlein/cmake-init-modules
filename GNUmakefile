@@ -11,6 +11,7 @@ MAKEFLAGS+= --no-builtin-rules	# Disable the built-in implicit rules.
 export CC?=clang-17
 export CXX?=$(shell which clang++)
 export CMAKE_EXPORT_COMPILE_COMMANDS=YES
+export CPM_USE_LOCAL_PACKAGES=NO
 
 export hostSystemName=$(shell uname)
 
@@ -50,7 +51,7 @@ distclean: clean
 	rm -rf conan stagedir .init CMakeUserPresets.json
 	# XXX NO! git clean -xdf
 
-format: clean
+format: distclean
 	find . -name CMakeLists.txt -o -name '*.cmake' | xargs cmake-format -i
 	git clang-format master
 

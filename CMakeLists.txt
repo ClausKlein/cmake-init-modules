@@ -6,16 +6,45 @@ project(cxx_modules_example VERSION 0.1.0 LANGUAGES CXX)
 
 # This property setting also needs to be consistent between the
 # installed shared library and its consumer, otherwise most
-# toolchains will once again reject the consumer’s generated BMI.
-set(CMAKE_CXX_EXTENSIONS FALSE)
+# toolchains will once again reject the consumer's generated BMI.
+
+if(NOT DEFINED CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 20)
+  set(CMAKE_CXX_EXTENSIONS FALSE)
+  set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+endif()
 
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
 
-add_library(Algo SHARED)
+include(cmake/CPM.cmake)
+
+# Disable clang-tidy for target
+macro(target_disable_clang_tidy TARGET)
+  find_program(CLANGTIDY clang-tidy)
+  if(CLANGTIDY)
+    set_target_properties(${TARGET} PROPERTIES C_CLANG_TIDY "")
+    set_target_properties(${TARGET} PROPERTIES CXX_CLANG_TIDY "")
+  endif()
+endmacro()
 
 #########################################################################
 # cmake-format: off
+
+# instead of find_package(fmt REQUIRED)
+cpmaddpackage(
+  NAME fmt
+  GIT_TAG 10.2.1
+  GITHUB_REPOSITORY fmtlib/fmt
+  SYSTEM YES
+  #FIXME(CK): OPTIONS "FMT_MODULE ON"
+)
+if(TARGET fmt)
+  target_disable_clang_tidy(fmt)
+endif()
+
+add_library(Algo SHARED)
+
 target_sources(Algo
     PRIVATE
         algo-impl.cpp
@@ -24,7 +53,8 @@ target_sources(Algo
         FILES
             algo-interface.cppm
 )
-target_link_libraries(Algo PRIVATE fmt::fmt)
+#XXX target_link_libraries(Algo PRIVATE fmt::fmt)
+target_link_libraries(Algo PRIVATE $<BUILD_INTERFACE:fmt::fmt-header-only>)
 
 # CMake requires the language standard to be specified as compile feature
 # when a target provides C++20 modules and the target will be installed
@@ -137,8 +167,10 @@ set_target_properties(
 
 target_compile_features(cmake-init-modules_cmake-init-modules PUBLIC cxx_std_20)
 
-find_package(fmt REQUIRED)
-target_link_libraries(cmake-init-modules_cmake-init-modules PRIVATE fmt::fmt)
+#XXX target_link_libraries(cmake-init-modules_cmake-init-modules PRIVATE fmt::fmt)
+target_link_libraries(
+  cmake-init-modules_cmake-init-modules PRIVATE $<BUILD_INTERFACE:fmt::fmt-header-only>
+)
 
 # ---- Install rules ----
 
