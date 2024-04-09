@@ -15,7 +15,7 @@ Checks: "*,\
   -misc-include-cleaner,\
   -readability-identifier-naming,\
   -readability-redundant-declaration,\
-  readability-avoid-unconditional-preprocessor-if\
+  -readability-avoid-unconditional-preprocessor-if\
 "
 WarningsAsErrors: '*'
 CheckOptions:

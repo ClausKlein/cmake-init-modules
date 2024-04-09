@@ -31,7 +31,10 @@ target_link_libraries(Algo PRIVATE fmt::fmt)
 target_compile_features(Algo PUBLIC cxx_std_20)
 
 include(GenerateExportHeader)
-generate_export_header(Algo)
+generate_export_header(Algo
+    CUSTOM_CONTENT_FROM_VARIABLE
+    pragma_suppress_c4251
+)
 target_sources(Algo
     PUBLIC
         FILE_SET HEADERS
