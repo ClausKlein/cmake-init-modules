@@ -33,6 +33,7 @@ test: all
 
 check: test
 	-run-clang-tidy -p build/dev
+	-iwyu_tool -p build/dev/ *.cpp -- -Xiwyu --cxx17ns
 
 .init: .CMakeUserPresets.json
 	perl -p -e 's/<hostSystemName>/${hostSystemName}/g;' .CMakeUserPresets.json > CMakeUserPresets.json

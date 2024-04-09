@@ -5,8 +5,8 @@ project(cmake-init-modulesExamples CXX)
 include(../cmake/folders.cmake)
 
 if(PROJECT_IS_TOP_LEVEL)
-  find_package(cmake-init-modules REQUIRED)
-  find_package(my_package REQUIRED)
+  find_package(cmake-init-modules 0.1 REQUIRED)
+  find_package(my_package 0.1 REQUIRED)
   enable_testing()
 endif()
 

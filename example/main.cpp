@@ -2,7 +2,7 @@ import algo;
 
 auto main() -> int
 {
-  Algo sut;
+  Algo sut("cmake professionals");
   sut.helloWorld();
 
   return 0;

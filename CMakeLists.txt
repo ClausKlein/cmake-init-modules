@@ -40,6 +40,9 @@ target_sources(Algo
 )
 
 include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+write_basic_package_version_file("my_package-config-version.cmake" COMPATIBILITY SameMajorVersion)
 
 install(TARGETS Algo
     EXPORT my_package-targets
@@ -55,6 +58,10 @@ install(TARGETS Algo
 install(EXPORT my_package-targets
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/my_package
     CXX_MODULES_DIRECTORY .
+)
+install(
+    FILES "${PROJECT_BINARY_DIR}/my_package-config-version.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/my_package
 )
 # The following file includes the my_package-targets.cmake file
 install(FILES cmake/my_package-config.cmake

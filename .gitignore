@@ -9,6 +9,7 @@ prefix/
 stagedir/
 .clangd
 .init
+*.swp
 CMakeLists.txt.user
 CMakeUserPresets.json
 compile_commands.json
