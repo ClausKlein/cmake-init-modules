@@ -1,10 +1,11 @@
 module;
 
-#include <fmt/core.h>
+// XXX #include <fmt/core.h>
 
 module algo;
 
-// TODO(CK): import fmt;
+// FIXME(CK):
+import fmt;
 
 void Algo::helloWorld()
 {

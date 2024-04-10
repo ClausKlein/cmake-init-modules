@@ -1,0 +1,195 @@
+bash-5.2$ ninja -v fmt
+
+[1/4] cd /Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/build/dev/_deps/fmt-build &&
+/usr/local/opt/llvm/bin/clang++ -std=c++20 -x c++-module --precompile -c -o fmt.pcm
+/Users/clausklein/.cache/CPM/fmt/c3ebf53335b44df838d9982d1a0e35afe190e34f/src/fmt.cc
+-I/Users/clausklein/.cache/CPM/fmt/c3ebf53335b44df838d9982d1a0e35afe190e34f/include
+
+[2/4] cd /Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/build/dev/_deps/fmt-build &&
+/usr/local/opt/llvm/bin/clang++
+-fmodule-file=/Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/build/dev/_deps/fmt-build/fmt.pcm -c -o fmt.o
+/Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/build/dev/_deps/fmt-build/fmt.pcm
+
+[3/4] : && /usr/local/opt/llvm/bin/clang++ -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wcast-qual -Wformat=2
+-Wundef -Werror=float-equal -Wshadow -Wcast-align -Wunused -Wnull-dereference -Wdouble-promotion -Wimplicit-fallthrough
+-Wextra-semi -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast -g -arch x86_64 -isysroot
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -dynamiclib
+-Wl,-headerpad_max_install_names -m64   -compatibility_version 10.0.0 -current_version 10.2.1 -o
+_deps/fmt-build/libfmtd.10.2.1.dylib -install_name @rpath/libfmtd.10.dylib _deps/fmt-build/fmt.o   && :
+
+[4/4] /usr/local/bin/cmake -E cmake_symlink_library _deps/fmt-build/libfmtd.10.2.1.dylib  _deps/fmt-build/libfmtd.10.dylib
+_deps/fmt-build/libfmtd.dylib && :
+
+bash-5.2$ ninja -v Algo 
+
+[1/2] /usr/local/opt/llvm/bin/clang++ -DAlgo_EXPORTS -DFMT_HEADER_ONLY=1
+-I/Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/build/dev -isystem
+/Users/clausklein/.cache/CPM/fmt/c3ebf53335b44df838d9982d1a0e35afe190e34f/include -Wall -Wextra -Wpedantic -Wconversion
+-Wsign-conversion -Wcast-qual -Wformat=2 -Wundef -Werror=float-equal -Wshadow -Wcast-align -Wunused -Wnull-dereference
+-Wdouble-promotion -Wimplicit-fallthrough -Wextra-semi -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast -g
+-std=c++20 -arch x86_64 -isysroot
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -fPIC
+-fvisibility=hidden -fvisibility-inlines-hidden -MD -MT CMakeFiles/Algo.dir/algo-impl.cpp.o -MF
+CMakeFiles/Algo.dir/algo-impl.cpp.o.d @CMakeFiles/Algo.dir/algo-impl.cpp.o.modmap -o CMakeFiles/Algo.dir/algo-impl.cpp.o -c
+/Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/algo-impl.cpp
+
+FAILED: CMakeFiles/Algo.dir/algo-impl.cpp.o 
+/usr/local/opt/llvm/bin/clang++ -DAlgo_EXPORTS -DFMT_HEADER_ONLY=1 -I/Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/build/dev -isystem /Users/clausklein/.cache/CPM/fmt/c3ebf53335b44df838d9982d1a0e35afe190e34f/include -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wcast-qual -Wformat=2 -Wundef -Werror=float-equal -Wshadow -Wcast-align -Wunused -Wnull-dereference -Wdouble-promotion -Wimplicit-fallthrough -Wextra-semi -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast -g -std=c++20 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -fPIC -fvisibility=hidden -fvisibility-inlines-hidden -MD -MT CMakeFiles/Algo.dir/algo-impl.cpp.o -MF CMakeFiles/Algo.dir/algo-impl.cpp.o.d @CMakeFiles/Algo.dir/algo-impl.cpp.o.modmap -o CMakeFiles/Algo.dir/algo-impl.cpp.o -c /Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/algo-impl.cpp
+/Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/algo-impl.cpp:8:8: fatal error: module 'fmt' not found
+    8 | import fmt;
+      | ~~~~~~~^~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+bash-5.2$ 
+
+bash-5.2$ tree _deps/
+_deps/
+`-- fmt-build
+    |-- CMakeFiles
+    |   |-- Export
+    |   |   `-- b834597d9b1628ff12ae4314c3a2e4b8
+    |   |       |-- fmt-targets-debug.cmake
+    |   |       `-- fmt-targets.cmake
+    |   `-- fmt.dir
+    |-- cmake_install.cmake
+    |-- fmt-config-version.cmake
+    |-- fmt-config.cmake
+    |-- fmt-targets.cmake
+    |-- fmt.o
+    |-- fmt.pc
+    |-- fmt.pcm
+    |-- libfmtd.10.2.1.dylib
+    |-- libfmtd.10.dylib -> libfmtd.10.2.1.dylib
+    `-- libfmtd.dylib -> libfmtd.10.dylib
+
+6 directories, 12 files
+bash-5.2$ 
+
+bash-5.2$ clang-format -i *.json
+bash-5.2$ head -50  *.ddi *.json *.modmap
+==> algo-impl.cpp.o.ddi <==
+{
+  "revision": 0,
+  "rules": [
+    {
+      "primary-output": "CMakeFiles/Algo.dir/algo-impl.cpp.o",
+      "requires": [
+        {
+          "logical-name": "fmt"
+        },
+        {
+          "logical-name": "algo"
+        }
+      ]
+    }
+  ],
+  "version": 1
+}
+
+==> algo-interface.cppm.o.ddi <==
+{
+  "revision": 0,
+  "rules": [
+    {
+      "primary-output": "CMakeFiles/Algo.dir/algo-interface.cppm.o",
+      "provides": [
+        {
+          "is-interface": true,
+          "logical-name": "algo",
+          "source-path": "/Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/algo-interface.cppm"
+        }
+      ]
+    }
+  ],
+  "version": 1
+}
+
+==> CXXDependInfo.json <==
+{
+  "bmi-installation": null,
+  "compiler-frontend-variant": "GNU",
+  "compiler-id": "Clang",
+  "compiler-simulate-id": "",
+  "config": "Debug",
+  "cxx-modules":
+      {
+        "CMakeFiles/Algo.dir/algo-interface.cppm.o":
+            {
+              "bmi-only": false,
+              "destination": "lib/cmake/my_package/src",
+              "name": "CXX_MODULES",
+              "relative-directory": "",
+              "source": "/Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/algo-interface.cppm",
+              "type": "CXX_MODULES",
+              "visibility": "PUBLIC"
+            }
+      },
+  "dir-cur-bld": "/Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/build/dev",
+  "dir-cur-src": "/Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules",
+  "dir-top-bld": "/Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/build/dev",
+  "dir-top-src": "/Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules",
+  "exports":
+      [
+        {
+          "cxx-module-info-dir": ".",
+          "destination": "lib/cmake/my_package",
+          "export-name": "Algo",
+          "export-prefix": "/Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/build/dev/CMakeFiles/Export/0814a8a452340fa10b4323026df361bb",
+          "install": true,
+          "namespace": ""
+        }
+      ],
+  "forward-modules-from-target-dirs": [],
+  "include-dirs":
+      [
+        ".",
+        "/Users/clausklein/.cache/CPM/fmt/c3ebf53335b44df838d9982d1a0e35afe190e34f/include"
+      ],
+  "language": "CXX",
+  "linked-target-dirs": [],
+  "module-dir": "/Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/build/dev/CMakeFiles/Algo.dir"
+}
+==> CXXModules.json <==
+{
+  "modules":
+      {
+        "algo":
+            {
+              "bmi": "/Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/build/dev/CMakeFiles/Algo.dir/algo.pcm",
+              "is-private": false
+            }
+      },
+  "references":
+      {
+        "algo":
+            {
+              "lookup-method": "by-name",
+              "path": "CMakeFiles/Algo.dir/algo.pcm"
+            }
+      },
+  "usages": {}
+}
+==> algo-impl.cpp.o.modmap <==
+-fmodule-file=algo=CMakeFiles/Algo.dir/algo.pcm
+
+==> algo-interface.cppm.o.modmap <==
+-x c++-module
+-fmodule-output=CMakeFiles/Algo.dir/algo.pcm
+bash-5.2$ !tree
+tree 
+.
+|-- CXX.dd
+|-- CXXDependInfo.json
+|-- CXXModules.json
+|-- algo-impl.cpp.o.ddi
+|-- algo-impl.cpp.o.ddi.d
+|-- algo-impl.cpp.o.modmap
+|-- algo-interface.cppm.o
+|-- algo-interface.cppm.o.ddi
+|-- algo-interface.cppm.o.ddi.d
+|-- algo-interface.cppm.o.modmap
+`-- algo.pcm
+
+1 directory, 11 files
+bash-5.2$ 
+

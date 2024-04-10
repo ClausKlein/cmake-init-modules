@@ -17,7 +17,10 @@
       "cacheVariables": {
         "CMAKE_EXPORT_COMPILE_COMMANDS": true,
         "BUILD_MCSS_DOCS": false,
-        "BUILD_SHARED_LIBS": false
+        "BUILD_SHARED_LIBS": true
+      },
+      "environment": {
+        "CPM_USE_LOCAL_PACKAGES": "OFF"
       }
     },
     {
@@ -48,8 +51,8 @@
         "ci-win64"
       ],
       "environment": {
-        "UseMultiToolTask": "true",
-        "EnforceProcessCountAcrossBuilds": "true"
+        "UseMultiToolTask": "ON",
+        "EnforceProcessCountAcrossBuilds": "ON"
       }
     },
     {
