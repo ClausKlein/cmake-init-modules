@@ -56,6 +56,7 @@ jobs:
       with: { python-version: "3.10" }
 
     - name: Setup Cpp
+      if: matrix.os == 'ubuntu-22.04'
       uses: aminya/setup-cpp@v1
       with:
         compiler: llvm-17
@@ -105,6 +106,7 @@ jobs:
       with: { python-version: "3.10" }
 
     - name: Setup Cpp
+      if: matrix.os == 'ubuntu-22.04'
       uses: aminya/setup-cpp@v1
       with:
         compiler: llvm-17
@@ -155,6 +157,8 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
+    env: { CXX: clang++-17 }
+
     steps:
     - uses: actions/checkout@v4
 
@@ -163,7 +167,7 @@ jobs:
       with: { python-version: "3.10" }
 
     - name: Setup Cpp
-      if: matrix.os != 'windows-2022'
+      if: matrix.os == 'ubuntu-22.04'
       uses: aminya/setup-cpp@v1
       with:
         compiler: llvm-17
