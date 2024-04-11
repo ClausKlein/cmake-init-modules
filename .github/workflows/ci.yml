@@ -161,7 +161,7 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    env: { CXX: clang++ }
+    # env: { CXX: clang++ }
 
     steps:
     - uses: actions/checkout@v4
