@@ -64,7 +64,7 @@ jobs:
         clangformat: true
         clangtidy: true
         cmake: true
-        conan: true
+        # conan: true
         gcovr: true
         ninja: true
         # ...
@@ -116,7 +116,7 @@ jobs:
         clangformat: true
         clangtidy: true
         cmake: true
-        conan: true
+        # conan: true
         gcovr: true
         ninja: true
         # ...
@@ -188,7 +188,7 @@ jobs:
         clangformat: true
         clangtidy: true
         cmake: true
-        conan: true
+        # conan: true
         gcovr: true
         ninja: true
         # ...

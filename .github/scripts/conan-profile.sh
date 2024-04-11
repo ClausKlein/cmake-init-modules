@@ -7,11 +7,10 @@ set -x
 pip3 install --upgrade pip || echo ignored
 pip3 install conan cmake ninja gcovr || echo ignored
 
+which conan
 conan --version
 conan profile --help
-conan profile new --help
-conan profile update --help
-conan profile update || conan profile detect --force
+conan profile detect --force
 
 std=20
 if [ "$RUNNER_OS" = Windows ]; then
