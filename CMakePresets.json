@@ -205,7 +205,6 @@
       "inherits": [
         "ci-build",
         "ci-linux",
-        "clang-tidy",
         "dev-mode",
         "conan"
       ]

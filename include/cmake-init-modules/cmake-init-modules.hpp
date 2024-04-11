@@ -62,7 +62,7 @@ public:
   /**
    * @brief Returns a non-owning pointer to the string stored in this class
    */
-  auto name() const -> char const*;
+  [[nodiscard]] auto name() const -> char const*;
 
 private:
   CMAKE_INIT_MODULES_SUPPRESS_C4251
