@@ -18,7 +18,7 @@
       "cacheVariables": {
         "CMAKE_EXPORT_COMPILE_COMMANDS": true,
         "BUILD_MCSS_DOCS": false,
-        "BUILD_SHARED_LIBS": true
+        "BUILD_SHARED_LIBS": false
       }
     },
     {
