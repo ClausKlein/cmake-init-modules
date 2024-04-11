@@ -154,6 +154,21 @@
       }
     },
     {
+      "name": "coverage-darwin",
+      "binaryDir": "${sourceDir}/build/coverage",
+      "inherits": "ci-darwin",
+      "hidden": true,
+      "cacheVariables": {
+        "ENABLE_COVERAGE": true,
+        "CMAKE_SKIP_INSTALL_RULES": true,
+        "CMAKE_BUILD_TYPE": "Coverage",
+        "CMAKE_CXX_FLAGS_COVERAGE": "-Og -g --coverage",
+        "CMAKE_EXE_LINKER_FLAGS_COVERAGE": "--coverage",
+        "CMAKE_SHARED_LINKER_FLAGS_COVERAGE": "--coverage",
+        "CMAKE_MAP_IMPORTED_CONFIG_COVERAGE": "Coverage;RelWithDebInfo;Release;Debug"
+      }
+    },
+    {
       "name": "ci-coverage",
       "inherits": [
         "coverage-linux",

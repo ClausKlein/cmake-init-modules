@@ -24,6 +24,7 @@ BUILD_TYPE=Debug
 all: .init conan
 	cmake --workflow --preset dev # XXX --fresh
 	cmake --install build/dev --prefix $(CURDIR)/stagedir
+	gcovr
 
 test: all
 	cd example && cmake -B build -S . -G Ninja -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) \
@@ -38,6 +39,7 @@ check: test
 
 .init: .CMakeUserPresets.json
 	perl -p -e 's/<hostSystemName>/${hostSystemName}/g;' .CMakeUserPresets.json > CMakeUserPresets.json
+	mkdir -p build/coverage/
 	touch .init
 
 conan: conanfile.py GNUmakefile

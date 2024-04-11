@@ -24,21 +24,23 @@
     {
       "name": "dev-Linux",
       "inherits": [
+        "coverage-linux",
         "dev-common",
         "ci-linux"
       ],
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_BUILD_TYPE": "Coverage"
       }
     },
     {
       "name": "dev-Darwin",
       "inherits": [
+        "coverage-darwin",
         "dev-common",
         "ci-darwin"
       ],
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_BUILD_TYPE": "Coverage"
       }
     },
     {

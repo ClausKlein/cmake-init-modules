@@ -1,9 +1,10 @@
 module;
 
 #include <fmt/core.h>
-//TODO(CK): import fmt;
 
 module algo;
+
+// TODO(CK): import fmt;
 
 void Algo::helloWorld()
 {
