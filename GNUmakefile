@@ -24,7 +24,7 @@ BUILD_TYPE=Debug
 all: .init conan
 	cmake --workflow --preset dev # XXX --fresh
 	cmake --install build/dev --prefix $(CURDIR)/stagedir
-	gcovr
+	-gcovr -v
 
 test: all
 	cd example && cmake -B build -S . -G Ninja -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) \

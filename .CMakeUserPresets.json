@@ -24,23 +24,21 @@
     {
       "name": "dev-Linux",
       "inherits": [
-        "coverage-linux",
         "dev-common",
         "ci-linux"
       ],
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Coverage"
+        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
       "name": "dev-Darwin",
       "inherits": [
-        "coverage-darwin",
         "dev-common",
         "ci-darwin"
       ],
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Coverage"
+        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
@@ -65,7 +63,7 @@
       "generator": "Ninja",
       "inherits": [
         "ci-coverage",
-        "dev-Linux"
+        "dev-<hostSystemName>"
       ]
     },
     {
@@ -73,7 +71,7 @@
       "generator": "Ninja",
       "inherits": [
         "ci-sanitize",
-        "dev-Linux"
+        "dev-<hostSystemName>"
       ]
     }
   ],
