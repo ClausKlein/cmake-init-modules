@@ -84,12 +84,13 @@ jobs:
       run: ctest --output-on-failure --no-tests=error -j 2
 
     - name: Process coverage info
-      run: cmake --build build/coverage -t coverage
+      # run: cmake --build build/coverage -t coverage
+      run: gcovr .
 
-    - name: Submit to codecov.io
-      uses: codecov/codecov-action@v4
-      with:
-        file: build/coverage/coverage.info
+    # - name: Submit to codecov.io
+    #   uses: codecov/codecov-action@v4
+    #   with:
+    #     file: build/coverage/coverage.info
 
   sanitize:
     needs: [lint]
@@ -157,14 +158,23 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    env: { CXX: clang++-17 }
+    env: { CXX: clang++ }
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Install Python
+      if: matrix.os != 'macos-14'
       uses: actions/setup-python@v5
       with: { python-version: "3.10" }
+
+    - name: Install llvm-17
+      if: matrix.os == 'macos-14'
+      run: |
+        brew install llvm
+        echo $(brew --prefix llvm@17)/bin
+        echo 'export PATH="/usr/local/opt/llvm/bin:$PATH"' >> ~/.profile
+        export PATH=$(brew --prefix llvm@17)/bin:$PATH && echo "PATH=$PATH" >> $GITHUB_ENV
 
     - name: Setup Cpp
       if: matrix.os == 'ubuntu-22.04'
