@@ -9,7 +9,6 @@ pip3 install conan cmake ninja gcovr || echo ignored
 
 which conan
 conan --version
-conan profile --help
 conan profile detect --force
 
 std=20

@@ -56,7 +56,6 @@ jobs:
       with: { python-version: "3.10" }
 
     - name: Setup Cpp
-      if: matrix.os == 'ubuntu-22.04'
       uses: aminya/setup-cpp@v1
       with:
         compiler: llvm-17
@@ -64,14 +63,14 @@ jobs:
         clangformat: true
         clangtidy: true
         cmake: true
-        # conan: true
+        # NO! conan: true
         gcovr: true
         ninja: true
         # ...
 
     - name: Install dependencies
       run: |
-        pip3 install conan cmake ninja gcovr
+        # NO! pip3 install conan cmake ninja gcovr
         bash < .github/scripts/conan-profile.sh
         conan install . -b missing
 
@@ -116,14 +115,14 @@ jobs:
         clangformat: true
         clangtidy: true
         cmake: true
-        # conan: true
+        # NO! conan: true
         gcovr: true
         ninja: true
         # ...
 
     - name: Install dependencies
       run: |
-        # pip3 install conan cmake ninja
+        # NO! pip3 install conan cmake ninja gcovr
         bash < .github/scripts/conan-profile.sh
         conan install . -b missing
 
@@ -161,8 +160,6 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    # env: { CXX: clang++ }
-
     steps:
     - uses: actions/checkout@v4
 
@@ -178,6 +175,7 @@ jobs:
         echo $(brew --prefix llvm@17)/bin
         echo 'export PATH="/usr/local/opt/llvm/bin:$PATH"' >> ~/.profile
         export PATH=$(brew --prefix llvm@17)/bin:$PATH && echo "PATH=$PATH" >> $GITHUB_ENV
+        echo "CXX=clang++" >> $GITHUB_ENV
 
     - name: Setup Cpp
       if: matrix.os == 'ubuntu-22.04'
@@ -188,7 +186,7 @@ jobs:
         clangformat: true
         clangtidy: true
         cmake: true
-        # conan: true
+        # NO! conan: true
         gcovr: true
         ninja: true
         # ...
