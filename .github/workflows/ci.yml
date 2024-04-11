@@ -61,10 +61,12 @@ jobs:
       with:
         compiler: llvm-17
         vcvarsall: ${{ contains(matrix.os, 'windows') }}
-        # conan: true
-        # vcpkg: true
         clangformat: true
         clangtidy: true
+        cmake: true
+        conan: true
+        gcovr: true
+        ninja: true
         # ...
 
     - name: Install dependencies
@@ -107,20 +109,21 @@ jobs:
       with: { python-version: "3.10" }
 
     - name: Setup Cpp
-      if: matrix.os == 'ubuntu-22.04'
       uses: aminya/setup-cpp@v1
       with:
         compiler: llvm-17
         vcvarsall: ${{ contains(matrix.os, 'windows') }}
-        # conan: true
-        # vcpkg: true
         clangformat: true
         clangtidy: true
+        cmake: true
+        conan: true
+        gcovr: true
+        ninja: true
         # ...
 
     - name: Install dependencies
       run: |
-        pip3 install conan cmake ninja
+        # pip3 install conan cmake ninja
         bash < .github/scripts/conan-profile.sh
         conan install . -b missing
 
@@ -182,16 +185,18 @@ jobs:
       with:
         compiler: llvm-17
         vcvarsall: ${{ contains(matrix.os, 'windows') }}
-        # conan: true
-        # vcpkg: true
         clangformat: true
         clangtidy: true
+        cmake: true
+        conan: true
+        gcovr: true
+        ninja: true
         # ...
 
     - name: Install dependencies
       shell: bash
       run: |
-        pip3 install conan cmake ninja gcovr
+        # pip3 install conan cmake ninja gcovr
         bash < .github/scripts/conan-profile.sh
         conan install . -b missing
 
