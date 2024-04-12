@@ -24,7 +24,7 @@ BUILD_TYPE=Debug
 all: .init conan
 	cmake --workflow --preset dev # XXX --fresh
 	cmake --install build/dev --prefix $(CURDIR)/stagedir
-	-gcovr -v
+	#FIXME: gcovr -v
 
 test: all
 	cd example && cmake -B build -S . -G Ninja -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) \
@@ -47,7 +47,7 @@ conan: conanfile.py GNUmakefile
 	conan install . -s build_type=$(BUILD_TYPE) -s compiler.cppstd=20 -b missing
 
 clean:
-	rm -rf build
+	rm -rf build example/build
 
 distclean: clean
 	rm -rf conan stagedir .init CMakeUserPresets.json

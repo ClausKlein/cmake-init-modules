@@ -11,9 +11,9 @@ which conan
 conan --version
 conan profile detect --force
 
-std=20
+std=23
 if [ "$RUNNER_OS" = Windows ]; then
-  std=20
+  std=23
 fi
 
 profile="$(conan profile path default)"

@@ -9,7 +9,7 @@ project(cxx_modules_example VERSION 0.1.0 LANGUAGES CXX)
 # toolchains will once again reject the consumer's generated BMI.
 
 if(NOT DEFINED CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 20)
+  set(CMAKE_CXX_STANDARD 23)
   set(CMAKE_CXX_EXTENSIONS FALSE)
   set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 endif()
@@ -57,8 +57,8 @@ target_sources(Algo
 target_link_libraries(Algo PRIVATE $<BUILD_INTERFACE:fmt::fmt-header-only>)
 
 # CMake requires the language standard to be specified as compile feature
-# when a target provides C++20 modules and the target will be installed
-target_compile_features(Algo PUBLIC cxx_std_20)
+# when a target provides C++23 modules and the target will be installed
+target_compile_features(Algo PUBLIC cxx_std_23)
 
 include(GenerateExportHeader)
 generate_export_header(Algo
@@ -165,7 +165,7 @@ set_target_properties(
              OUTPUT_NAME cmake-init-modules
 )
 
-target_compile_features(cmake-init-modules_cmake-init-modules PUBLIC cxx_std_20)
+target_compile_features(cmake-init-modules_cmake-init-modules PUBLIC cxx_std_23)
 
 #XXX target_link_libraries(cmake-init-modules_cmake-init-modules PRIVATE fmt::fmt)
 target_link_libraries(
