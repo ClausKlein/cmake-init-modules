@@ -131,7 +131,6 @@
     {
       "name": "ci-win64",
       "inherits": [
-        "flags-windows",
         "ci-std"
       ],
       "generator": "Visual Studio 17 2022",
