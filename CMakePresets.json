@@ -135,7 +135,10 @@
       ],
       "generator": "Visual Studio 17 2022",
       "architecture": "x64",
-      "hidden": true
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
     },
     {
       "name": "coverage-linux",
