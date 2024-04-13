@@ -172,8 +172,7 @@
       "name": "ci-coverage",
       "inherits": [
         "coverage-linux",
-        "dev-mode",
-        "conan"
+        "dev-mode"
       ],
       "cacheVariables": {
         "COVERAGE_HTML_COMMAND": ""
@@ -184,8 +183,7 @@
       "binaryDir": "${sourceDir}/build/sanitize",
       "inherits": [
         "ci-linux",
-        "dev-mode",
-        "conan"
+        "dev-mode"
       ],
       "cacheVariables": {
         "CMAKE_SKIP_INSTALL_RULES": true,
@@ -207,8 +205,7 @@
       "inherits": [
         "ci-build",
         "ci-darwin",
-        "dev-mode",
-        "conan"
+        "dev-mode"
       ]
     },
     {
@@ -220,8 +217,7 @@
       "inherits": [
         "ci-build",
         "ci-linux",
-        "dev-mode",
-        "conan"
+        "dev-mode"
       ]
     },
     {
@@ -233,8 +229,7 @@
       "inherits": [
         "ci-build",
         "ci-win64",
-        "dev-mode",
-        "conan"
+        "dev-mode"
       ]
     },
     {

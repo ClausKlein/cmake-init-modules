@@ -69,10 +69,11 @@ jobs:
         # ...
 
     - name: Install dependencies
+      shell: bash
       run: |
         # NO! pip3 install conan cmake ninja gcovr
         bash < .github/scripts/conan-profile.sh
-        conan install . -b missing
+        # conan install . -b missing
 
     - name: Configure
       run: cmake --preset=ci-coverage
@@ -121,10 +122,11 @@ jobs:
         # ...
 
     - name: Install dependencies
+      shell: bash
       run: |
         # NO! pip3 install conan cmake ninja gcovr
         bash < .github/scripts/conan-profile.sh
-        conan install . -b missing
+        # conan install . -b missing
 
     - name: Configure
       run: cmake --preset=ci-sanitize
@@ -196,7 +198,7 @@ jobs:
       run: |
         # pip3 install conan cmake ninja gcovr
         bash < .github/scripts/conan-profile.sh
-        conan install . -b missing
+        # conan install . -b missing
 
     - name: Setup MultiToolTask
       if: matrix.os == 'windows-2022'
@@ -233,7 +235,7 @@ jobs:
       run: |
         cmake -B example/build -S example -G Ninja -D CMAKE_BUILD_TYPE=Release \
             -D "CMAKE_PREFIX_PATH=$PWD/stagedir;$PWD/conan" \
-            --toolchain "$PWD/conan/conan_toolchain.cmake"
+            # --toolchain "$PWD/conan/conan_toolchain.cmake"
         ninja -C example/build
         ninja -C example/build test
 

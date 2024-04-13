@@ -105,9 +105,9 @@ install(FILES cmake/my_package-config.cmake
 # cmake-format: on
 #########################################################################
 
-# enable_testing()
-# add_subdirectory(example)
-# return()
+enable_testing()
+add_subdirectory(example)
+return()
 
 ##################################################
 

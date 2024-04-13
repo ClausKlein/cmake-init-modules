@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28...3.29)
+cmake_minimum_required(VERSION 3.28.4...3.29)
 
 project(cmake-init-modulesExamples CXX)
 
@@ -10,7 +10,6 @@ if(PROJECT_IS_TOP_LEVEL)
   set(CMAKE_CXX_EXTENSIONS FALSE)
   set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
-  find_package(cmake-init-modules 0.1 REQUIRED)
   find_package(my_package 0.1 REQUIRED)
   enable_testing()
 endif()
@@ -19,9 +18,13 @@ add_executable(app main.cpp)
 target_link_libraries(app PRIVATE Algo)
 add_test(NAME app COMMAND app)
 
-# return()
+return()
 
 ##################################################
+
+if(PROJECT_IS_TOP_LEVEL)
+  find_package(cmake-init-modules 0.1 REQUIRED)
+endif()
 
 add_custom_target(run-examples)
 
