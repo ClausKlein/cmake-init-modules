@@ -200,11 +200,11 @@ jobs:
         bash < .github/scripts/conan-profile.sh
         # conan install . -b missing
 
-    - name: Setup MultiToolTask
-      if: matrix.os == 'windows-2022'
-      run: |
-        Add-Content "$env:GITHUB_ENV" 'UseMultiToolTask=true'
-        Add-Content "$env:GITHUB_ENV" 'EnforceProcessCountAcrossBuilds=true'
+    # - name: Setup MultiToolTask
+    #   if: matrix.os == 'windows-2022'
+    #   run: |
+    #     Add-Content "$env:GITHUB_ENV" 'UseMultiToolTask=true'
+    #     Add-Content "$env:GITHUB_ENV" 'EnforceProcessCountAcrossBuilds=true'
 
     - name: Configure
       shell: pwsh
@@ -224,11 +224,6 @@ jobs:
     - name: Test
       working-directory: build
       run: ctest --output-on-failure --no-tests=error -C Release -j 2
-
-    # - name: TestInstalledVersion
-    #   if: matrix.os == 'ubuntu-22.04'
-    #   run: |
-    #     BUILD_SHARED_LIBS=${{ matrix.shared }} gmake test
 
     - name: TestInstalledVersion
       if: matrix.os != 'windows-2022'
