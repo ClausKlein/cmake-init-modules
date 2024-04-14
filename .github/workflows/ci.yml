@@ -200,16 +200,23 @@ jobs:
         bash < .github/scripts/conan-profile.sh
         # conan install . -b missing
 
-    # - name: Setup MultiToolTask
-    #   if: matrix.os == 'windows-2022'
-    #   run: |
-    #     Add-Content "$env:GITHUB_ENV" 'UseMultiToolTask=true'
-    #     Add-Content "$env:GITHUB_ENV" 'EnforceProcessCountAcrossBuilds=true'
+    - name: Setup MultiToolTask
+      if: matrix.os == 'windows-2022'
+      run: |
+        Add-Content "$env:GITHUB_ENV" 'UseMultiToolTask=true'
+        Add-Content "$env:GITHUB_ENV" 'EnforceProcessCountAcrossBuilds=true'
 
-    - name: Configure
+    - name: Configure preset
+      if: matrix.os != 'windows-2022'
       shell: pwsh
       run: cmake "--preset=ci-$("${{ matrix.os }}".split("-")[0])"
         -D BUILD_SHARED_LIBS=${{ matrix.shared }}
+
+    - name: Configure on windows
+      if: matrix.os == 'windows-2022'
+      shell: pwsh
+      run: cmake -G "Visual Studio 17 2022" -S . -B build\Release
+        -D CMAKE_INSTALL_PREFIX=$(Get-Location)\stagedir -D BUILD_SHARED_LIBS=${{ matrix.shared }}
 
     - name: Setup PATH
       if: matrix.os == 'windows-2022' && matrix.type == 'shared'
