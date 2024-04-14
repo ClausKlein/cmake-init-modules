@@ -1,12 +1,19 @@
 #!/bin/bash
 
 set -e
+set -u
+set -x
 
-conan profile detect -f
+pip3 install --upgrade pip || echo ignored
+pip3 install conan cmake ninja gcovr || echo ignored
 
-std=20
+which conan
+conan --version
+conan profile detect --force
+
+std=23
 if [ "$RUNNER_OS" = Windows ]; then
-  std=20
+  std=23
 fi
 
 profile="$(conan profile path default)"

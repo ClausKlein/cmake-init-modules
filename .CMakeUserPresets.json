@@ -1,0 +1,118 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 28,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "dev-common",
+      "hidden": true,
+      "inherits": [
+        "dev-mode"
+      ],
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+        "BUILD_MCSS_DOCS": false,
+        "BUILD_SHARED_LIBS": false
+      }
+    },
+    {
+      "name": "dev-Linux",
+      "inherits": [
+        "dev-common",
+        "ci-linux"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "dev-Darwin",
+      "inherits": [
+        "dev-common",
+        "ci-darwin"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "dev-win64",
+      "inherits": [
+        "dev-common",
+        "cppcheck",
+        "ci-win64"
+      ],
+      "environment": {
+        "UseMultiToolTask": "true",
+        "EnforceProcessCountAcrossBuilds": "true"
+      }
+    },
+    {
+      "name": "dev",
+      "generator": "Ninja",
+      "inherits": "dev-<hostSystemName>"
+    },
+    {
+      "name": "dev-coverage",
+      "generator": "Ninja",
+      "inherits": [
+        "ci-coverage",
+        "dev-<hostSystemName>"
+      ]
+    },
+    {
+      "name": "dev-sanitize",
+      "generator": "Ninja",
+      "inherits": [
+        "ci-sanitize",
+        "dev-<hostSystemName>"
+      ]
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "dev",
+      "configurePreset": "dev",
+      "configuration": "Debug",
+      "jobs": 12
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "dev",
+      "configurePreset": "dev",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "jobs": 12,
+        "noTestsAction": "error"
+      }
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "dev",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "dev"
+        },
+        {
+          "type": "build",
+          "name": "dev"
+        },
+        {
+          "type": "test",
+          "name": "dev"
+        }
+      ]
+    }
+  ]
+}

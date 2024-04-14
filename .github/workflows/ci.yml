@@ -4,10 +4,10 @@ on:
   push:
     branches:
     - master
+    - develop
 
   pull_request:
     branches:
-    - master
     - develop
 
 jobs:
@@ -35,6 +35,8 @@ jobs:
 
     runs-on: ubuntu-22.04
 
+    env: { CXX: clang++-17 }
+
     # To enable coverage, delete the last line from the conditional below and
     # edit the "<name>" placeholder to your GitHub name.
     # If you do not wish to use codecov, then simply delete this job from the
@@ -53,11 +55,25 @@ jobs:
       uses: actions/setup-python@v5
       with: { python-version: "3.10" }
 
+    - name: Setup Cpp
+      uses: aminya/setup-cpp@v1
+      with:
+        compiler: llvm-17
+        vcvarsall: ${{ contains(matrix.os, 'windows') }}
+        clangformat: true
+        clangtidy: true
+        cmake: true
+        # NO! conan: true
+        gcovr: true
+        ninja: true
+        # ...
+
     - name: Install dependencies
+      shell: bash
       run: |
-        pip3 install conan
+        # NO! pip3 install conan cmake ninja gcovr
         bash < .github/scripts/conan-profile.sh
-        conan install . -b missing
+        # conan install . -b missing
 
     - name: Configure
       run: cmake --preset=ci-coverage
@@ -70,19 +86,20 @@ jobs:
       run: ctest --output-on-failure --no-tests=error -j 2
 
     - name: Process coverage info
-      run: cmake --build build/coverage -t coverage
+      # run: cmake --build build/coverage -t coverage
+      run: gcovr .
 
-    - name: Submit to codecov.io
-      uses: codecov/codecov-action@v4
-      with:
-        file: build/coverage/coverage.info
+    # - name: Submit to codecov.io
+    #   uses: codecov/codecov-action@v4
+    #   with:
+    #     file: build/coverage/coverage.info
 
   sanitize:
     needs: [lint]
 
     runs-on: ubuntu-22.04
 
-    env: { CXX: clang++-14 }
+    env: { CXX: clang++-17 }
 
     steps:
     - uses: actions/checkout@v4
@@ -91,11 +108,25 @@ jobs:
       uses: actions/setup-python@v5
       with: { python-version: "3.10" }
 
+    - name: Setup Cpp
+      uses: aminya/setup-cpp@v1
+      with:
+        compiler: llvm-17
+        vcvarsall: ${{ contains(matrix.os, 'windows') }}
+        clangformat: true
+        clangtidy: true
+        cmake: true
+        # NO! conan: true
+        gcovr: true
+        ninja: true
+        # ...
+
     - name: Install dependencies
+      shell: bash
       run: |
-        pip3 install conan
+        # NO! pip3 install conan cmake ninja gcovr
         bash < .github/scripts/conan-profile.sh
-        conan install . -b missing
+        # conan install . -b missing
 
     - name: Configure
       run: cmake --preset=ci-sanitize
@@ -121,7 +152,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        os: [macos-13, ubuntu-22.04, windows-2022]
+        os: [macos-14, ubuntu-22.04, windows-2022]
 
         type: [shared, static]
 
@@ -134,25 +165,40 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install static analyzers
-      if: matrix.os == 'ubuntu-22.04'
-      run: >-
-        sudo apt-get install clang-tidy-14 cppcheck -y -q
-
-        sudo update-alternatives --install
-        /usr/bin/clang-tidy clang-tidy
-        /usr/bin/clang-tidy-14 140
-
     - name: Install Python
-      uses: actions/setup-python@v4
+      if: matrix.os != 'macos-14'
+      uses: actions/setup-python@v5
       with: { python-version: "3.10" }
+
+    - name: Install llvm-17
+      if: matrix.os == 'macos-14'
+      run: |
+        brew install conan gcovr ninja llvm
+        echo $(brew --prefix llvm@17)/bin
+        echo 'export PATH="/usr/local/opt/llvm/bin:$PATH"' >> ~/.profile
+        export PATH=$(brew --prefix llvm@17)/bin:$PATH && echo "PATH=$PATH" >> $GITHUB_ENV
+        echo "CXX=clang++" >> $GITHUB_ENV
+
+    - name: Setup Cpp
+      if: matrix.os == 'ubuntu-22.04'
+      uses: aminya/setup-cpp@v1
+      with:
+        compiler: llvm-17
+        vcvarsall: ${{ contains(matrix.os, 'windows') }}
+        clangformat: true
+        clangtidy: true
+        cmake: true
+        # NO! conan: true
+        gcovr: true
+        ninja: true
+        # ...
 
     - name: Install dependencies
       shell: bash
       run: |
-        pip3 install conan
+        # pip3 install conan cmake ninja gcovr
         bash < .github/scripts/conan-profile.sh
-        conan install . -b missing
+        # conan install . -b missing
 
     - name: Setup MultiToolTask
       if: matrix.os == 'windows-2022'
@@ -160,10 +206,17 @@ jobs:
         Add-Content "$env:GITHUB_ENV" 'UseMultiToolTask=true'
         Add-Content "$env:GITHUB_ENV" 'EnforceProcessCountAcrossBuilds=true'
 
-    - name: Configure
+    - name: Configure preset
+      if: matrix.os != 'windows-2022'
       shell: pwsh
       run: cmake "--preset=ci-$("${{ matrix.os }}".split("-")[0])"
         -D BUILD_SHARED_LIBS=${{ matrix.shared }}
+
+    - name: Configure on windows
+      if: matrix.os == 'windows-2022'
+      shell: pwsh
+      run: cmake -G "Visual Studio 17 2022" -S . -B build -D CMAKE_BUILD_TYPE=Release
+        -D CMAKE_INSTALL_PREFIX=$(Get-Location)/stagedir -D BUILD_SHARED_LIBS=${{ matrix.shared }}
 
     - name: Setup PATH
       if: matrix.os == 'windows-2022' && matrix.type == 'shared'
@@ -173,11 +226,20 @@ jobs:
       run: cmake --build build --config Release -j 2
 
     - name: Install
-      run: cmake --install build --config Release --prefix prefix
+      run: cmake --install build --config Release --prefix stagedir
 
     - name: Test
       working-directory: build
       run: ctest --output-on-failure --no-tests=error -C Release -j 2
+
+    - name: TestInstalledVersion
+      if: matrix.os != 'windows-2022'
+      run: |
+        cmake -B example/build -S example -G Ninja -D CMAKE_BUILD_TYPE=Release \
+            -D "CMAKE_PREFIX_PATH=$PWD/stagedir;$PWD/conan" \
+            # --toolchain "$PWD/conan/conan_toolchain.cmake"
+        ninja -C example/build
+        ninja -C example/build test
 
   docs:
     # Deploy docs only when builds succeed
@@ -204,11 +266,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       with: { python-version: "3.10" }
 
     - name: Install m.css dependencies
-      run: pip3 install jinja2 Pygments
+      run: pip3 install jinja2 Pygments cmake ninja
 
     - name: Install Doxygen
       run: sudo apt-get update -q

@@ -3,16 +3,21 @@
 # misc-non-private-member-variables-in-classes: the options don't do anything
 # modernize-use-nodiscard: too aggressive, attribute is situationally useful
 Checks: "*,\
-  -google-readability-todo,\
+  google-readability-todo,\
   -altera-*,\
   -fuchsia-*,\
   fuchsia-multiple-inheritance,\
   -llvm-header-guard,\
   -llvm-include-order,\
   -llvmlibc-*,\
-  -modernize-use-nodiscard,\
-  -misc-non-private-member-variables-in-classes"
-WarningsAsErrors: ''
+  modernize-use-nodiscard,\
+  misc-non-private-member-variables-in-classes,\
+  -misc-include-cleaner,\
+  -readability-identifier-naming,\
+  -readability-redundant-declaration,\
+  -readability-avoid-unconditional-preprocessor-if\
+"
+WarningsAsErrors: '*'
 CheckOptions:
   - key: 'bugprone-argument-comment.StrictMode'
     value: 'true'

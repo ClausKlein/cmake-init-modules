@@ -1,6 +1,6 @@
 # cmake-init-modules
 
-This is the cmake-init-modules project.
+This is the [cmake-init](https://github.com/friendlyanon/cmake-init) generated example project.
 
 # Building and installing
 

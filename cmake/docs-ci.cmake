@@ -13,20 +13,15 @@ set(src "${PROJECT_SOURCE_DIR}")
 set(mcss_SOURCE_DIR "${bin}/docs/.ci")
 if(NOT IS_DIRECTORY "${mcss_SOURCE_DIR}")
   file(MAKE_DIRECTORY "${mcss_SOURCE_DIR}")
-  file(
-      DOWNLOAD
-      https://github.com/friendlyanon/m.css/releases/download/release-1/mcss.zip
-      "${mcss_SOURCE_DIR}/mcss.zip"
-      STATUS status
-      EXPECTED_MD5 00cd2757ebafb9bcba7f5d399b3bec7f
+  file(DOWNLOAD https://github.com/friendlyanon/m.css/releases/download/release-1/mcss.zip
+       "${mcss_SOURCE_DIR}/mcss.zip" STATUS status EXPECTED_MD5 00cd2757ebafb9bcba7f5d399b3bec7f
   )
   if(NOT status MATCHES "^0;")
     message(FATAL_ERROR "Download failed with ${status}")
   endif()
   execute_process(
-      COMMAND "${CMAKE_COMMAND}" -E tar xf mcss.zip
-      WORKING_DIRECTORY "${mcss_SOURCE_DIR}"
-      RESULT_VARIABLE result
+    COMMAND "${CMAKE_COMMAND}" -E tar xf mcss.zip WORKING_DIRECTORY "${mcss_SOURCE_DIR}"
+    RESULT_VARIABLE result
   )
   if(NOT result EQUAL "0")
     message(FATAL_ERROR "Extraction failed with ${result}")
@@ -41,7 +36,9 @@ endif()
 
 # ---- Process project() call in CMakeLists.txt ----
 
-file(READ "${src}/CMakeLists.txt" content)
+file(
+  READ "${src}/CMakeLists.txt" content
+)
 
 string(FIND "${content}" "project(" index)
 if(index EQUAL "-1")
@@ -55,7 +52,10 @@ if(index EQUAL "-1")
 endif()
 string(SUBSTRING "${content}" 0 "${index}" content)
 
-file(WRITE "${bin}/docs-ci.project.cmake" "docs_${content}\n)\n")
+file(
+  WRITE "${bin}/docs-ci.project.cmake"
+  "docs_${content}\n)\n"
+)
 
 macro(list_pop_front list out)
   list(GET "${list}" 0 "${out}")
@@ -100,12 +100,13 @@ endforeach()
 set(mcss_script "${mcss_SOURCE_DIR}/documentation/doxygen.py")
 set(config "${bin}/docs/conf.py")
 
-file(REMOVE_RECURSE "${out}/html" "${out}/xml")
+file(
+  REMOVE_RECURSE "${out}/html" "${out}/xml"
+)
 
 execute_process(
-    COMMAND "${Python3_EXECUTABLE}" "${mcss_script}" "${config}"
-    WORKING_DIRECTORY "${bin}/docs"
-    RESULT_VARIABLE result
+  COMMAND "${Python3_EXECUTABLE}" "${mcss_script}" "${config}" WORKING_DIRECTORY "${bin}/docs"
+  RESULT_VARIABLE result
 )
 if(NOT result EQUAL "0")
   message(FATAL_ERROR "m.css returned with ${result}")
