@@ -37,7 +37,8 @@ cpmaddpackage(
   GIT_TAG 10.2.1
   GITHUB_REPOSITORY fmtlib/fmt
   SYSTEM YES
-  #FIXME(CK): OPTIONS "FMT_MODULE ON"
+  #FIXME(CK):
+  OPTIONS "FMT_MODULE ON"
 )
 if(TARGET fmt)
   target_disable_clang_tidy(fmt)
