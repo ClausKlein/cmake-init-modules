@@ -5,11 +5,9 @@ module;
 
 #include <algo_export.h>  // <-- Generated header added to the global fragment
 
-export module
-    algo;  // <-- Annotation not currently required, but see discussion below
+export module algo;  // <-- Annotation not currently required, but see discussion below
 
-export class ALGO_EXPORT
-    Algo  // <-- ALGO_EXPORT annotation added to the class definition
+export class ALGO_EXPORT Algo  // <-- ALGO_EXPORT annotation added to the class definition
 {
 public:
   explicit Algo(std::string name)
