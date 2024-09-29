@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28.4...3.29)
+cmake_minimum_required(VERSION 3.28.4...3.30)
 
 project(cmake-init-modulesExamples CXX)
 

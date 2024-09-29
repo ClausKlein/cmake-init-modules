@@ -35,3 +35,20 @@ project("example" LANGUAGES CXX)
 
 add_executable(main)
 target_sources(main PRIVATE main.cpp)
+
+# Make a library.
+add_library(uses_std STATIC)
+# Add sources.
+target_sources(uses_std PRIVATE uses_std.cxx)
+# Tell CMake we're using C++23 but only C++20 is needed to consume it.
+target_compile_features(uses_std PRIVATE cxx_std_23 INTERFACE cxx_std_20)
+
+# Make an executable.
+add_executable(test-module)
+# Note that this source is *not* allowed to `import std` as it ends up
+# with only C++20 support due to the `uses_std` INTERFACE requirements.
+target_sources(test-module PRIVATE main.cxx)
+target_link_libraries(test-module PRIVATE uses_std)
+
+enable_testing()
+add_test(NAME test-module COMMAND test-module)

@@ -1,9 +1,9 @@
 #include <string>
 
-void hello_world(std::string const& name);
+extern void hello_world(std::string const& name);
 
-int main(int argc, char* argv[])
+auto main(int /*argc*/, char* argv[]) -> int
 {
-  hello_world(argv[0] ? argv[0] : "Voldemort?");
+  hello_world((argv[1] != nullptr) ? argv[1] : "Voldemort?");
   return 0;
 }
