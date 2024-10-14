@@ -118,7 +118,22 @@ endif()
 if(PROJECT_IS_TOP_LEVEL)
   enable_testing()
   add_subdirectory(example)
-  add_subdirectory(std)
+
+  # cmake-format: off
+  add_test(using-std-test
+      ${CMAKE_CTEST_COMMAND}
+      -C ${CMAKE_BUILD_TYPE}
+      --build-and-test
+          "${CMAKE_CURRENT_SOURCE_DIR}/std"
+          "${CMAKE_CURRENT_BINARY_DIR}/std"
+      --build-generator ${CMAKE_GENERATOR}
+      --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+      --build-options
+          "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
+          "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
+          "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
+  )
+  # cmake-format: on
 endif()
 
 ##################################################
