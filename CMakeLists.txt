@@ -118,6 +118,7 @@ endif()
 if(PROJECT_IS_TOP_LEVEL)
   enable_testing()
   add_subdirectory(example)
+  add_subdirectory(std)
 endif()
 
 ##################################################
