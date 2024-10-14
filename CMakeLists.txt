@@ -18,7 +18,12 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
 
 include(cmake/CPM.cmake)
-include(cmake/AddUninstallTarget.cmake)
+
+if(PROJECT_IS_TOP_LEVEL)
+  include(cmake/AddUninstallTarget.cmake)
+  include(cmake/lint-targets.cmake)
+  include(cmake/spell-targets.cmake)
+endif()
 
 # Disable clang-tidy for target
 macro(target_disable_clang_tidy TARGET)
@@ -76,6 +81,7 @@ target_sources(Algo
 )
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)
+  include(CPack)
   include(GNUInstallDirs)
   include(CMakePackageConfigHelpers)
 
@@ -117,7 +123,6 @@ endif()
 ##################################################
 return() # NOTE: XXX
 ##################################################
-
 
 # project(
 #   cmake-init-modules

@@ -9,11 +9,11 @@ if(PROJECT_IS_TOP_LEVEL)
   set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
   find_package(my_package 0.1 QUIET)
-    if(NOT my_package_FOUND)
-        message(STATUS "find_package(my_package) was NOT found, use as subproject ...")
-        # test if the targets are usable if used as subproject
-        add_subdirectory(.. my_package EXCLUDE_FROM_ALL)
-    endif()
+  if(NOT my_package_FOUND)
+    message(STATUS "find_package(my_package) was NOT found, use as subproject ...")
+    # test if the targets are usable if used as subproject
+    add_subdirectory(.. my_package EXCLUDE_FROM_ALL)
+  endif()
 
   enable_testing()
 endif()
@@ -23,22 +23,22 @@ target_link_libraries(app PRIVATE Algo)
 add_test(NAME app-tests COMMAND app)
 
 if(NOT PROJECT_IS_TOP_LEVEL)
-    # test if the targets are findable from the build directory
-    # cmake-format: off
-    add_test(find-package-test
-        ${CMAKE_CTEST_COMMAND}
-        -C ${CMAKE_BUILD_TYPE}
-        --build-and-test
-            "${CMAKE_CURRENT_SOURCE_DIR}"
-            "${CMAKE_CURRENT_BINARY_DIR}/find-package-test"
-        --build-generator ${CMAKE_GENERATOR}
-        --build-makeprogram ${CMAKE_MAKE_PROGRAM}
-        --build-options
-            "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
-            "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
-            "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
-    )
-    # cmake-format: on
+  # test if the targets are findable from the build directory
+  # cmake-format: off
+  add_test(find-package-test
+      ${CMAKE_CTEST_COMMAND}
+      -C ${CMAKE_BUILD_TYPE}
+      --build-and-test
+          "${CMAKE_CURRENT_SOURCE_DIR}"
+          "${CMAKE_CURRENT_BINARY_DIR}/find-package-test"
+      --build-generator ${CMAKE_GENERATOR}
+      --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+      --build-options
+          "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
+          "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
+          "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
+  )
+  # cmake-format: on
 endif()
 
 ##################################################

@@ -9,6 +9,7 @@ endmacro()
 default(FORMAT_COMMAND clang-format)
 default(
   PATTERNS
+  CMake*Presets.json
   source/*.cpp
   source/*.hpp
   include/*.hpp

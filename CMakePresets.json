@@ -25,7 +25,15 @@
       "name": "dev-mode",
       "hidden": true,
       "inherits": "cmake-pedantic",
+      "installDir": "${sourceDir}/stagedir",
       "cacheVariables": {
+        "CMAKE_PREFIX_PATH": {
+          "type": "path",
+          "value": "${sourceDir}/stagedir"
+        },
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+        "CMAKE_MESSAGE_LOG_LEVEL": "WARNING",
+        "CMAKE_VERIFY_INTERFACE_HEADER_SETS": true,
         "cmake-init-modules_DEVELOPER_MODE": true
       }
     },

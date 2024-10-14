@@ -23,17 +23,9 @@ BUILD_TYPE=Debug
 
 all: .init # conan
 	cmake --workflow --preset dev # XXX --fresh
-	cmake --install build/dev --prefix $(CURDIR)/stagedir
 	# FIXME: gcovr -v
 
-test: all
-	cd example && cmake -B build -S . -G Ninja -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) \
-		-D 'CMAKE_PREFIX_PATH=$(CURDIR)/stagedir;$(CURDIR)/conan' \
-		# --toolchain $(CURDIR)/conan/conan_toolchain.cmake # XXX --debug-find-pkg=fmt
-	ninja -C example/build
-	ninja -C example/build test
-
-check: test
+check: all
 	-run-clang-tidy -p build/dev
 	-iwyu_tool -p build/dev/ *.cpp -- -Xiwyu --cxx17ns
 

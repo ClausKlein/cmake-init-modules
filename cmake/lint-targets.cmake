@@ -1,4 +1,5 @@
 set(FORMAT_PATTERNS
+    CMake*Presets.json
     source/*.cpp
     source/*.hpp
     include/*.hpp

@@ -82,7 +82,12 @@
       "name": "dev",
       "configurePreset": "dev",
       "configuration": "Debug",
-      "jobs": 12
+      "jobs": 12,
+      "targets": [
+        "all",
+        "all_verify_interface_header_sets",
+        "install"
+      ]
     }
   ],
   "testPresets": [
@@ -99,6 +104,15 @@
       }
     }
   ],
+  "packagePresets": [
+    {
+      "name": "dev",
+      "configurePreset": "dev",
+      "generators": [
+        "TGZ"
+      ]
+    }
+  ],
   "workflowPresets": [
     {
       "name": "dev",
@@ -113,6 +127,10 @@
         },
         {
           "type": "test",
+          "name": "dev"
+        },
+        {
+          "type": "package",
           "name": "dev"
         }
       ]
