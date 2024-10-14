@@ -39,7 +39,7 @@ target_sources(main PRIVATE main.cpp)
 # Make a library.
 add_library(uses_std STATIC)
 # Add sources.
-target_sources(uses_std PRIVATE uses_std.cxx)
+target_sources(uses_std PRIVATE uses_std.cppm)
 # Tell CMake we're using C++23 but only C++20 is needed to consume it.
 target_compile_features(uses_std PRIVATE cxx_std_23 INTERFACE cxx_std_20)
 
