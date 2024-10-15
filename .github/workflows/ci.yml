@@ -211,6 +211,10 @@ jobs:
         Add-Content "$env:GITHUB_ENV" 'UseMultiToolTask=true'
         Add-Content "$env:GITHUB_ENV" 'EnforceProcessCountAcrossBuilds=true'
 
+    - name: Setup PATH
+      if: matrix.os == 'windows-2022'
+      run: Add-Content "$env:GITHUB_PATH" "$(Get-Location)\stagedir\bin"
+
     - name: Configure preset
       # if: matrix.os != 'windows-2022'
       shell: bash
