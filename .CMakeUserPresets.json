@@ -12,7 +12,6 @@
       "inherits": [
         "dev-mode"
       ],
-      "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
         "CMAKE_EXPORT_COMPILE_COMMANDS": true,
@@ -44,7 +43,7 @@
       }
     },
     {
-      "name": "dev-win64",
+      "name": "dev-Windows",
       "inherits": [
         "dev-common",
         "cppcheck",
@@ -57,23 +56,20 @@
     },
     {
       "name": "dev",
-      "generator": "Ninja",
       "inherits": "dev-<hostSystemName>"
     },
     {
       "name": "dev-coverage",
-      "generator": "Ninja",
       "inherits": [
         "ci-coverage",
-        "dev-<hostSystemName>"
+        "dev-Linux"
       ]
     },
     {
       "name": "dev-sanitize",
-      "generator": "Ninja",
       "inherits": [
         "ci-sanitize",
-        "dev-<hostSystemName>"
+        "dev-Linux"
       ]
     }
   ],

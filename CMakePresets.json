@@ -97,7 +97,7 @@
     },
     {
       "name": "flags-windows",
-      "description": "Note that all the flags after /W4 are required for MSVC to conform to the language standard",
+      "description": "NOTE: that all the flags after /W4 are required for MSVC to conform to the language standard",
       "hidden": true,
       "cacheVariables": {
         "CMAKE_CXX_FLAGS": "/sdl /guard:cf /utf-8 /diagnostics:caret /w14165 /w44242 /w44254 /w44263 /w34265 /w34287 /w44296 /w44365 /w44388 /w44464 /w14545 /w14546 /w14547 /w14549 /w14555 /w34619 /w34640 /w24826 /w14905 /w14906 /w14928 /w45038 /W4 /permissive- /volatile:iso /Zc:inline /Zc:preprocessor /Zc:enumTypes /Zc:lambda /Zc:__cplusplus /Zc:externConstexpr /Zc:throwingNew /EHsc",
@@ -141,14 +141,15 @@
       "inherits": [
         "ci-std"
       ],
-      "toolchainFile": "cmake/WindowsToolchain/Windows.MSVC.toolchain.cmake",
       "generator": "Ninja Multi-Config",
       "description": "This build is only available on Windows",
       "hidden": true,
-      "architecture": "x64",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_SYSTEM_PROCESSOR": "AMD64"
+        "CMAKE_C_COMPILER": "cl",
+        "CMAKE_CXX_COMPILER": "cl",
+        "CMAKE_SYSTEM_PROCESSOR": "AMD64",
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/WindowsToolchain/Windows.MSVC.toolchain.cmake"
       },
       "condition": {
         "type": "equals",

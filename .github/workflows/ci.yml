@@ -155,7 +155,7 @@ jobs:
         os: [macos-15, ubuntu-24.04, windows-2022]
         include:
         - { os: macos-15, uname: Darwin }
-        - { os: ubuntu-22.04, uname: Linux }
+        - { os: ubuntu-24.04, uname: Linux }
         - { os: windows-2022, uname: Windows }
 
         # type: [shared, static]
@@ -167,6 +167,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
     - name: Install Python
       if: matrix.os != 'macos-15'
