@@ -46,7 +46,6 @@
       "name": "dev-Windows",
       "inherits": [
         "dev-common",
-        "cppcheck",
         "ci-win64"
       ],
       "environment": {
