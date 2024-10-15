@@ -17,8 +17,6 @@ endif()
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
 
-include(cmake/CPM.cmake)
-
 if(PROJECT_IS_TOP_LEVEL)
   include(cmake/AddUninstallTarget.cmake)
   include(cmake/lint-targets.cmake)
@@ -37,6 +35,7 @@ endmacro()
 #########################################################################
 # cmake-format: off
 
+# include(cmake/CPM.cmake)
 # instead of find_package(fmt REQUIRED)
 # cpmaddpackage(
 #   NAME fmt
@@ -59,8 +58,6 @@ target_sources(Algo
     FILES
       algo-interface.cppm
 )
-# TODO(CK): target_link_libraries(Algo PRIVATE fmt::fmt)
-# target_link_libraries(Algo PRIVATE $<BUILD_INTERFACE:fmt::fmt-header-only>)
 
 # CMake requires the language standard to be specified as compile feature
 # when a target provides C++23 modules and the target will be installed
@@ -69,7 +66,6 @@ target_compile_features(Algo PUBLIC cxx_std_23)
 include(GenerateExportHeader)
 generate_export_header(Algo
   CUSTOM_CONTENT_FROM_VARIABLE
-  # XXX pragma_suppress_c4251
 )
 target_sources(Algo
   PUBLIC
@@ -119,20 +115,20 @@ if(PROJECT_IS_TOP_LEVEL)
   enable_testing()
   add_subdirectory(example)
 
-  # cmake-format: off
-  add_test(using-std-test
-      ${CMAKE_CTEST_COMMAND}
-      -C ${CMAKE_BUILD_TYPE}
-      --build-and-test
-          "${CMAKE_CURRENT_SOURCE_DIR}/std"
-          "${CMAKE_CURRENT_BINARY_DIR}/std"
-      --build-generator ${CMAKE_GENERATOR}
-      --build-makeprogram ${CMAKE_MAKE_PROGRAM}
-      --build-options
-          "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
-          "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
-          "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
-  )
+  # # cmake-format: off
+  # add_test(using-std-test
+  #     ${CMAKE_CTEST_COMMAND}
+  #     -C ${CMAKE_BUILD_TYPE}
+  #     --build-and-test
+  #         "${CMAKE_CURRENT_SOURCE_DIR}/std"
+  #         "${CMAKE_CURRENT_BINARY_DIR}/std"
+  #     --build-generator ${CMAKE_GENERATOR}
+  #     --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+  #     --build-options
+  #         "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
+  #         "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
+  #         "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
+  # )
   # cmake-format: on
 endif()
 

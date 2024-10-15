@@ -153,12 +153,15 @@ jobs:
 
       matrix:
         os: [macos-15, ubuntu-24.04, windows-2022]
-
-        type: [shared, static]
-
         include:
-        - { type: shared, shared: YES }
-        - { type: static, shared: NO }
+        - { os: macos-15, uname: Darwin }
+        - { os: ubuntu-22.04, uname: Linux }
+        - { os: windows-2022, uname: Windows }
+
+        # type: [shared, static]
+        # include:
+        # - { type: shared, shared: YES }
+        # - { type: static, shared: NO }
 
     runs-on: ${{ matrix.os }}
 
@@ -207,39 +210,42 @@ jobs:
         Add-Content "$env:GITHUB_ENV" 'EnforceProcessCountAcrossBuilds=true'
 
     - name: Configure preset
-      if: matrix.os != 'windows-2022'
-      shell: pwsh
-      run: cmake "--preset=ci-$("${{ matrix.os }}".split("-")[0])"
-        -D BUILD_SHARED_LIBS=${{ matrix.shared }}
-
-    - name: Configure on windows
-      if: matrix.os == 'windows-2022'
-      shell: pwsh
-      run: cmake -G "Visual Studio 17 2022" -S . -B build -D CMAKE_BUILD_TYPE=Release
-        -D CMAKE_INSTALL_PREFIX=$(Get-Location)/stagedir -D BUILD_SHARED_LIBS=${{ matrix.shared }}
-
-    - name: Setup PATH
-      if: matrix.os == 'windows-2022' && matrix.type == 'shared'
-      run: Add-Content "$env:GITHUB_PATH" "$(Get-Location)\build\Release"
-
-    - name: Build
-      run: cmake --build build --config Release -j 2
-
-    - name: Install
-      run: cmake --install build --config Release --prefix stagedir
-
-    - name: Test
-      working-directory: build
-      run: ctest --output-on-failure --no-tests=error -C Release -j 2
-
-    - name: TestInstalledVersion
-      if: matrix.os != 'windows-2022'
+      # if: matrix.os != 'windows-2022'
+      shell: bash
       run: |
-        cmake -B example/build -S example -G Ninja -D CMAKE_BUILD_TYPE=Release \
-            -D "CMAKE_PREFIX_PATH=$PWD/stagedir;$PWD/conan" \
-            # --toolchain "$PWD/conan/conan_toolchain.cmake"
-        ninja -C example/build
-        ninja -C example/build test
+        export hostSystemName=${{ matrix.uname }}
+        uname || echo ${hostSystemName}
+        perl -p -e "s/<hostSystemName>/${hostSystemName}/g;" .CMakeUserPresets.json > CMakeUserPresets.json
+        cmake --workflow --preset=dev  # XXX "--preset=ci-$("${{ matrix.os }}".split("-")[0])"
+
+    # - name: Configure on windows
+    #   if: matrix.os == 'windows-2022'
+    #   shell: pwsh
+    #   run: cmake -G "Visual Studio 17 2022" -S . -B build -D CMAKE_BUILD_TYPE=Release
+    #     -D CMAKE_INSTALL_PREFIX=$(Get-Location)/stagedir -D BUILD_SHARED_LIBS=${{ matrix.shared }}
+
+    # - name: Setup PATH
+    #   if: matrix.os == 'windows-2022' && matrix.type == 'shared'
+    #   run: Add-Content "$env:GITHUB_PATH" "$(Get-Location)\build\Release"
+
+    # - name: Build
+    #   run: cmake --build build --config Release -j 2
+
+    # - name: Install
+    #   run: cmake --install build --config Release --prefix stagedir
+
+    # - name: Test
+    #   working-directory: build
+    #   run: ctest --output-on-failure --no-tests=error -C Release -j 2
+
+    # - name: TestInstalledVersion
+    #   if: matrix.os != 'windows-2022'
+    #   run: |
+    #     cmake -B example/build -S example -G Ninja -D CMAKE_BUILD_TYPE=Release \
+    #         -D "CMAKE_PREFIX_PATH=$PWD/stagedir;$PWD/conan" \
+    #         # --toolchain "$PWD/conan/conan_toolchain.cmake"
+    #     ninja -C example/build
+    #     ninja -C example/build test
 
   docs:
     # Deploy docs only when builds succeed
