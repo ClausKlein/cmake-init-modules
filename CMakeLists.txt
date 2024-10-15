@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28.4...3.29)
+cmake_minimum_required(VERSION 3.30...3.31)
 
 include(cmake/prelude.cmake)
 
@@ -17,7 +17,11 @@ endif()
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
 
-include(cmake/CPM.cmake)
+if(PROJECT_IS_TOP_LEVEL)
+  include(cmake/AddUninstallTarget.cmake)
+  include(cmake/lint-targets.cmake)
+  include(cmake/spell-targets.cmake)
+endif()
 
 # Disable clang-tidy for target
 macro(target_disable_clang_tidy TARGET)
@@ -31,30 +35,29 @@ endmacro()
 #########################################################################
 # cmake-format: off
 
+# include(cmake/CPM.cmake)
 # instead of find_package(fmt REQUIRED)
-cpmaddpackage(
-  NAME fmt
-  GIT_TAG 10.2.1
-  GITHUB_REPOSITORY fmtlib/fmt
-  SYSTEM YES
-  #FIXME(CK): OPTIONS "FMT_MODULE ON"
-)
-if(TARGET fmt)
-  target_disable_clang_tidy(fmt)
-endif()
+# cpmaddpackage(
+#   NAME fmt
+#   GIT_TAG 10.2.1
+#   GITHUB_REPOSITORY fmtlib/fmt
+#   SYSTEM YES
+#   # TODO(CK): OPTIONS "FMT_MODULE ON"
+# )
+# if(TARGET fmt)
+#   target_disable_clang_tidy(fmt)
+# endif()
 
 add_library(Algo SHARED)
 
 target_sources(Algo
-    PRIVATE
-        algo-impl.cpp
-    PUBLIC
-        FILE_SET CXX_MODULES
-        FILES
-            algo-interface.cppm
+  PRIVATE
+    algo-impl.cpp
+  PUBLIC
+    FILE_SET CXX_MODULES
+    FILES
+      algo-interface.cppm
 )
-#XXX target_link_libraries(Algo PRIVATE fmt::fmt)
-target_link_libraries(Algo PRIVATE $<BUILD_INTERFACE:fmt::fmt-header-only>)
 
 # CMake requires the language standard to be specified as compile feature
 # when a target provides C++23 modules and the target will be installed
@@ -62,53 +65,76 @@ target_compile_features(Algo PUBLIC cxx_std_23)
 
 include(GenerateExportHeader)
 generate_export_header(Algo
-    CUSTOM_CONTENT_FROM_VARIABLE
-    pragma_suppress_c4251
+  CUSTOM_CONTENT_FROM_VARIABLE
 )
 target_sources(Algo
-    PUBLIC
-        FILE_SET HEADERS
-        BASE_DIRS ${CMAKE_CURRENT_BINARY_DIR}
-        FILES
-            ${CMAKE_CURRENT_BINARY_DIR}/algo_export.h
+  PUBLIC
+    FILE_SET HEADERS
+    BASE_DIRS
+      ${CMAKE_CURRENT_BINARY_DIR}
+    FILES
+      ${CMAKE_CURRENT_BINARY_DIR}/algo_export.h
 )
 
-include(GNUInstallDirs)
-include(CMakePackageConfigHelpers)
+if(NOT CMAKE_SKIP_INSTALL_RULES)
+  include(CPack)
+  include(GNUInstallDirs)
+  include(CMakePackageConfigHelpers)
 
-write_basic_package_version_file("my_package-config-version.cmake" COMPATIBILITY SameMajorVersion)
+  write_basic_package_version_file("my_package-config-version.cmake" COMPATIBILITY SameMajorVersion)
 
-install(TARGETS Algo
+  install(TARGETS Algo
     EXPORT my_package-targets
     # ... a few details omitted, see the "Deep CMake For Library Authors" talk
     FILE_SET CXX_MODULES
-        # There's currently no convention for this location, see discussion below
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/my_package/src
+      # There's currently no convention for this location, see discussion below
+      DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/my_package/src
     FILE_SET HEADERS
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}   # Same as default, could be omitted
+      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}  # Same as default, could be omitted
     INCLUDES
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
-install(EXPORT my_package-targets
+      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  )
+  install(EXPORT my_package-targets
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/my_package
     CXX_MODULES_DIRECTORY .
-)
-install(
+  )
+  install(
     FILES "${PROJECT_BINARY_DIR}/my_package-config-version.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/my_package
-)
-# The following file includes the my_package-targets.cmake file
-install(FILES cmake/my_package-config.cmake
+  )
+  # The following file includes the my_package-targets.cmake file
+  install(FILES cmake/my_package-config.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/my_package
-)
+  )
+endif()
 
 # cmake-format: on
 #########################################################################
 
-enable_testing()
-add_subdirectory(example)
-return()
+if(PROJECT_IS_TOP_LEVEL)
+  enable_testing()
+  add_subdirectory(example)
 
+  # # cmake-format: off
+  # add_test(using-std-test
+  #     ${CMAKE_CTEST_COMMAND}
+  #     -C ${CMAKE_BUILD_TYPE}
+  #     --build-and-test
+  #         "${CMAKE_CURRENT_SOURCE_DIR}/std"
+  #         "${CMAKE_CURRENT_BINARY_DIR}/std"
+  #     --build-generator ${CMAKE_GENERATOR}
+  #     --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+  #     --build-options
+  #         "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
+  #         "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
+  #         "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
+  #         "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}"
+  # )
+  # cmake-format: on
+endif()
+
+##################################################
+return() # NOTE: XXX
 ##################################################
 
 # project(
