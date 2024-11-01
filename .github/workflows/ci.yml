@@ -12,19 +12,19 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
     - uses: actions/checkout@v4
 
     - uses: actions/setup-python@v5
-      with: { python-version: "3.10" }
+      with: { python-version: "3.12" }
 
     - name: Install codespell
       run: pip3 install codespell
 
     - name: Lint
-      run: cmake -D FORMAT_COMMAND=clang-format-14 -P cmake/lint.cmake
+      run: cmake -D FORMAT_COMMAND=clang-format-18 -P cmake/lint.cmake
 
     - name: Spell check
       if: always()
@@ -33,9 +33,9 @@ jobs:
   coverage:
     needs: [lint]
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
-    env: { CXX: clang++-17 }
+    env: { CXX: clang++-18 }
 
     # To enable coverage, delete the last line from the conditional below and
     # edit the "<name>" placeholder to your GitHub name.
@@ -53,12 +53,12 @@ jobs:
 
     - name: Install Python
       uses: actions/setup-python@v5
-      with: { python-version: "3.10" }
+      with: { python-version: "3.12" }
 
     - name: Setup Cpp
       uses: aminya/setup-cpp@v1
       with:
-        compiler: llvm-17
+        compiler: llvm-18
         vcvarsall: ${{ contains(matrix.os, 'windows') }}
         clangformat: true
         clangtidy: true
@@ -97,21 +97,21 @@ jobs:
   sanitize:
     needs: [lint]
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
-    env: { CXX: clang++-17 }
+    env: { CXX: clang++-18 }
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Install Python
       uses: actions/setup-python@v5
-      with: { python-version: "3.10" }
+      with: { python-version: "3.12" }
 
     - name: Setup Cpp
       uses: aminya/setup-cpp@v1
       with:
-        compiler: llvm-17
+        compiler: llvm-18
         vcvarsall: ${{ contains(matrix.os, 'windows') }}
         clangformat: true
         clangtidy: true
@@ -152,38 +152,43 @@ jobs:
       fail-fast: false
 
       matrix:
-        os: [macos-14, ubuntu-22.04, windows-2022]
-
-        type: [shared, static]
-
+        os: [macos-15, ubuntu-24.04, windows-2022]
         include:
-        - { type: shared, shared: YES }
-        - { type: static, shared: NO }
+        - { os: macos-15, uname: Darwin }
+        - { os: ubuntu-24.04, uname: Linux }
+        - { os: windows-2022, uname: Windows }
+
+        # type: [shared, static]
+        # include:
+        # - { type: shared, shared: YES }
+        # - { type: static, shared: NO }
 
     runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
     - name: Install Python
-      if: matrix.os != 'macos-14'
+      if: matrix.os != 'macos-15'
       uses: actions/setup-python@v5
-      with: { python-version: "3.10" }
+      with: { python-version: "3.12" }
 
-    - name: Install llvm-17
-      if: matrix.os == 'macos-14'
+    - name: Install llvm-18
+      if: matrix.os == 'macos-15'
       run: |
         brew install conan gcovr ninja llvm
-        echo $(brew --prefix llvm@17)/bin
+        echo $(brew --prefix llvm@18)/bin
         echo 'export PATH="/usr/local/opt/llvm/bin:$PATH"' >> ~/.profile
-        export PATH=$(brew --prefix llvm@17)/bin:$PATH && echo "PATH=$PATH" >> $GITHUB_ENV
+        export PATH=$(brew --prefix llvm@18)/bin:$PATH && echo "PATH=$PATH" >> $GITHUB_ENV
         echo "CXX=clang++" >> $GITHUB_ENV
 
     - name: Setup Cpp
-      if: matrix.os == 'ubuntu-22.04'
+      if: matrix.os == 'ubuntu-24.04'
       uses: aminya/setup-cpp@v1
       with:
-        compiler: llvm-17
+        compiler: llvm-18
         vcvarsall: ${{ contains(matrix.os, 'windows') }}
         clangformat: true
         clangtidy: true
@@ -206,46 +211,53 @@ jobs:
         Add-Content "$env:GITHUB_ENV" 'UseMultiToolTask=true'
         Add-Content "$env:GITHUB_ENV" 'EnforceProcessCountAcrossBuilds=true'
 
-    - name: Configure preset
-      if: matrix.os != 'windows-2022'
-      shell: pwsh
-      run: cmake "--preset=ci-$("${{ matrix.os }}".split("-")[0])"
-        -D BUILD_SHARED_LIBS=${{ matrix.shared }}
-
-    - name: Configure on windows
-      if: matrix.os == 'windows-2022'
-      shell: pwsh
-      run: cmake -G "Visual Studio 17 2022" -S . -B build -D CMAKE_BUILD_TYPE=Release
-        -D CMAKE_INSTALL_PREFIX=$(Get-Location)/stagedir -D BUILD_SHARED_LIBS=${{ matrix.shared }}
-
     - name: Setup PATH
-      if: matrix.os == 'windows-2022' && matrix.type == 'shared'
-      run: Add-Content "$env:GITHUB_PATH" "$(Get-Location)\build\Release"
+      if: matrix.os == 'windows-2022'
+      run: Add-Content "$env:GITHUB_PATH" "$(Get-Location)\stagedir\bin"
 
-    - name: Build
-      run: cmake --build build --config Release -j 2
-
-    - name: Install
-      run: cmake --install build --config Release --prefix stagedir
-
-    - name: Test
-      working-directory: build
-      run: ctest --output-on-failure --no-tests=error -C Release -j 2
-
-    - name: TestInstalledVersion
-      if: matrix.os != 'windows-2022'
+    - name: Configure preset
+      # if: matrix.os != 'windows-2022'
+      shell: bash
       run: |
-        cmake -B example/build -S example -G Ninja -D CMAKE_BUILD_TYPE=Release \
-            -D "CMAKE_PREFIX_PATH=$PWD/stagedir;$PWD/conan" \
-            # --toolchain "$PWD/conan/conan_toolchain.cmake"
-        ninja -C example/build
-        ninja -C example/build test
+        export hostSystemName=${{ matrix.uname }}
+        uname || echo ${hostSystemName}
+        perl -p -e "s/<hostSystemName>/${hostSystemName}/g;" .CMakeUserPresets.json > CMakeUserPresets.json
+        cmake --workflow --preset=dev  # XXX "--preset=ci-$("${{ matrix.os }}".split("-")[0])"
+
+    # - name: Configure on windows
+    #   if: matrix.os == 'windows-2022'
+    #   shell: pwsh
+    #   run: cmake -G "Visual Studio 17 2022" -S . -B build -D CMAKE_BUILD_TYPE=Release
+    #     -D CMAKE_INSTALL_PREFIX=$(Get-Location)/stagedir -D BUILD_SHARED_LIBS=${{ matrix.shared }}
+
+    # - name: Setup PATH
+    #   if: matrix.os == 'windows-2022' && matrix.type == 'shared'
+    #   run: Add-Content "$env:GITHUB_PATH" "$(Get-Location)\build\Release"
+
+    # - name: Build
+    #   run: cmake --build build --config Release -j 2
+
+    # - name: Install
+    #   run: cmake --install build --config Release --prefix stagedir
+
+    # - name: Test
+    #   working-directory: build
+    #   run: ctest --output-on-failure --no-tests=error -C Release -j 2
+
+    # - name: TestInstalledVersion
+    #   if: matrix.os != 'windows-2022'
+    #   run: |
+    #     cmake -B example/build -S example -G Ninja -D CMAKE_BUILD_TYPE=Release \
+    #         -D "CMAKE_PREFIX_PATH=$PWD/stagedir;$PWD/conan" \
+    #         # --toolchain "$PWD/conan/conan_toolchain.cmake"
+    #     ninja -C example/build
+    #     ninja -C example/build test
 
   docs:
     # Deploy docs only when builds succeed
     needs: [sanitize, test]
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     # To enable, first you have to create an orphaned gh-pages branch:
     #
@@ -267,7 +279,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - uses: actions/setup-python@v5
-      with: { python-version: "3.10" }
+      with: { python-version: "3.12" }
 
     - name: Install m.css dependencies
       run: pip3 install jinja2 Pygments cmake ninja

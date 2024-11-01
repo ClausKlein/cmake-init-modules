@@ -1,12 +1,20 @@
 module;
 
-#include <fmt/core.h>
+#include <version>
+
+#if defined(__cpp_lib_print)
+#  include <print>
+using std::print;
+#else
+#  include <fmt/core.h>
+using fmt::print;
+#endif
 
 module algo;
 
-// TODO(CK): import fmt;
+// FIXME(CK): import fmt;
 
 void Algo::helloWorld()
 {
-  fmt::print("hello {}\n", m_name);
+  print("hello {}\n", m_name);
 }

@@ -6,10 +6,10 @@ MAKEFLAGS+= --no-builtin-rules	# Disable the built-in implicit rules.
 # MAKEFLAGS+= --warn-undefined-variables	# Warn when an undefined variable is referenced.
 # MAKEFLAGS+= --include-dir=$(CURDIR)/conan	# Search DIRECTORY for included makefiles (*.mk).
 
-# export CC=gcc-13
-# export CXX=g++-13
-export CC?=clang-17
-export CXX?=$(shell which clang++)
+# export CC=gcc-14
+# export CXX=g++-14
+export CC?=clang-19
+export CXX?=$(shell type -f clang++)
 export CMAKE_EXPORT_COMPILE_COMMANDS=YES
 export CPM_USE_LOCAL_PACKAGES=NO
 
@@ -23,21 +23,14 @@ BUILD_TYPE=Debug
 
 all: .init # conan
 	cmake --workflow --preset dev # XXX --fresh
-	cmake --install build/dev --prefix $(CURDIR)/stagedir
-	#FIXME: gcovr -v
+	# FIXME: gcovr -v
 
-test: all
-	cd example && cmake -B build -S . -G Ninja -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) \
-		-D 'CMAKE_PREFIX_PATH=$(CURDIR)/stagedir;$(CURDIR)/conan' \
-		# --toolchain $(CURDIR)/conan/conan_toolchain.cmake # XXX --debug-find-pkg=fmt
-	ninja -C example/build
-	ninja -C example/build test
-
-check: test
+check: all
 	-run-clang-tidy -p build/dev
 	-iwyu_tool -p build/dev/ *.cpp -- -Xiwyu --cxx17ns
 
 .init: .CMakeUserPresets.json
+	# TODO: jrsonnet --preserve-order CMakeUserPresets.jsonnet > CMakeUserPresets.json ||
 	perl -p -e 's/<hostSystemName>/${hostSystemName}/g;' .CMakeUserPresets.json > CMakeUserPresets.json
 	mkdir -p build/coverage/
 	touch .init

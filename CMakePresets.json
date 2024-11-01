@@ -1,8 +1,8 @@
 {
-  "version": 6,
+  "version": 9,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 28,
+    "minor": 30,
     "patch": 0
   },
   "configurePresets": [
@@ -25,7 +25,15 @@
       "name": "dev-mode",
       "hidden": true,
       "inherits": "cmake-pedantic",
+      "installDir": "${sourceDir}/stagedir",
       "cacheVariables": {
+        "CMAKE_PREFIX_PATH": {
+          "type": "path",
+          "value": "${sourceDir}/stagedir"
+        },
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+        "CMAKE_MESSAGE_LOG_LEVEL": "WARNING",
+        "CMAKE_VERIFY_INTERFACE_HEADER_SETS": true,
         "cmake-init-modules_DEVELOPER_MODE": true
       }
     },
@@ -34,8 +42,7 @@
       "hidden": true,
       "cacheVariables": {
         "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Release;Debug",
-        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/conan/conan_toolchain.cmake",
-        "CMAKE_POLICY_DEFAULT_CMP0091": "NEW"
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/conan/conan_toolchain.cmake"
       }
     },
     {
@@ -90,7 +97,7 @@
     },
     {
       "name": "flags-windows",
-      "description": "Note that all the flags after /W4 are required for MSVC to conform to the language standard",
+      "description": "NOTE: that all the flags after /W4 are required for MSVC to conform to the language standard",
       "hidden": true,
       "cacheVariables": {
         "CMAKE_CXX_FLAGS": "/sdl /guard:cf /utf-8 /diagnostics:caret /w14165 /w44242 /w44254 /w44263 /w34265 /w34287 /w44296 /w44365 /w44388 /w44464 /w14545 /w14546 /w14547 /w14549 /w14555 /w34619 /w34640 /w24826 /w14905 /w14906 /w14928 /w45038 /W4 /permissive- /volatile:iso /Zc:inline /Zc:preprocessor /Zc:enumTypes /Zc:lambda /Zc:__cplusplus /Zc:externConstexpr /Zc:throwingNew /EHsc",
@@ -102,11 +109,11 @@
         "lhs": "${hostSystemName}",
         "rhs": "Windows"
       }
-
     },
     {
       "name": "ci-linux",
       "generator": "Ninja",
+      "description": "This build is only available on Linux",
       "hidden": true,
       "inherits": [
         "flags-linux",
@@ -119,6 +126,7 @@
     {
       "name": "ci-darwin",
       "generator": "Ninja",
+      "description": "This build is only available on Darwin",
       "hidden": true,
       "inherits": [
         "flags-darwin",
@@ -133,17 +141,27 @@
       "inherits": [
         "ci-std"
       ],
-      "generator": "Visual Studio 17 2022",
-      "architecture": "x64",
+      "generator": "Ninja Multi-Config",
+      "description": "This build is only available on Windows",
       "hidden": true,
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_COMPILER": "cl",
+        "CMAKE_CXX_COMPILER": "cl",
+        "CMAKE_SYSTEM_PROCESSOR": "AMD64",
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/WindowsToolchain/Windows.MSVC.toolchain.cmake"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
       }
     },
     {
       "name": "coverage-linux",
       "binaryDir": "${sourceDir}/build/coverage",
       "inherits": "ci-linux",
+      "description": "This build is only available on Linux",
       "hidden": true,
       "cacheVariables": {
         "ENABLE_COVERAGE": true,
@@ -159,6 +177,7 @@
       "name": "coverage-darwin",
       "binaryDir": "${sourceDir}/build/coverage",
       "inherits": "ci-darwin",
+      "description": "This build is only available on Darwin",
       "hidden": true,
       "cacheVariables": {
         "ENABLE_COVERAGE": true,
@@ -187,6 +206,7 @@
         "ci-linux",
         "dev-mode"
       ],
+      "description": "This build is only available on Linux",
       "cacheVariables": {
         "CMAKE_SKIP_INSTALL_RULES": true,
         "CMAKE_BUILD_TYPE": "Sanitize",
