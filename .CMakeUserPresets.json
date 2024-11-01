@@ -103,6 +103,9 @@
     {
       "name": "dev",
       "configurePreset": "dev",
+      "configurations": [
+        "Debug"
+      ],
       "generators": [
         "TGZ"
       ]
