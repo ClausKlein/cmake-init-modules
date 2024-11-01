@@ -23,18 +23,20 @@ target_link_libraries(app PRIVATE Algo)
 add_test(NAME app-tests COMMAND app)
 
 if(NOT PROJECT_IS_TOP_LEVEL)
-  # test if the targets are findable from the build directory
+  # test if the targets are findable from the source or install directory
   # cmake-format: off
-  add_test(find-package-test
-      ${CMAKE_CTEST_COMMAND}
-      -C ${CMAKE_BUILD_TYPE}
+  add_test(NAME find-package-test
+    COMMAND ${CMAKE_CTEST_COMMAND}
+      # --verbose
+      --output-on-failure
+      -C $<CONFIG>
       --build-and-test
           "${CMAKE_CURRENT_SOURCE_DIR}"
           "${CMAKE_CURRENT_BINARY_DIR}/find-package-test"
       --build-generator ${CMAKE_GENERATOR}
       --build-makeprogram ${CMAKE_MAKE_PROGRAM}
       --build-options
-          "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
+          "-DCMAKE_BUILD_TYPE=$<CONFIG>"
           "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
           "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
           "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}"
