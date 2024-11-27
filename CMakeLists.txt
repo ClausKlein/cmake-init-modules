@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.30...3.31)
 
 include(cmake/prelude.cmake)
 
-project(cxx_modules_example VERSION 0.1.0 LANGUAGES CXX)
+# XXX project(cxx_modules_example VERSION 0.2.0 LANGUAGES CXX)
+project(my_package VERSION 0.2.0 LANGUAGES CXX)
 
 # This property setting also needs to be consistent between the
 # installed shared library and its consumer, otherwise most
@@ -22,6 +23,8 @@ if(PROJECT_IS_TOP_LEVEL)
   include(cmake/lint-targets.cmake)
   include(cmake/spell-targets.cmake)
 endif()
+
+set(CMAKE_DEBUG_POSTFIX D)
 
 # Disable clang-tidy for target
 macro(target_disable_clang_tidy TARGET)
@@ -49,6 +52,7 @@ endmacro()
 # endif()
 
 add_library(Algo SHARED)
+add_library(my_package::Algo ALIAS Algo)
 
 target_sources(Algo
   PRIVATE
@@ -97,6 +101,7 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
   install(EXPORT my_package-targets
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/my_package
     CXX_MODULES_DIRECTORY .
+    NAMESPACE my_package::
   )
   install(
     FILES "${PROJECT_BINARY_DIR}/my_package-config-version.cmake"

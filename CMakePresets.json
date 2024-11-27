@@ -141,7 +141,7 @@
       "inherits": [
         "ci-std"
       ],
-      "generator": "Ninja Multi-Config",
+      "generator": "Ninja",
       "description": "This build is only available on Windows",
       "hidden": true,
       "cacheVariables": {

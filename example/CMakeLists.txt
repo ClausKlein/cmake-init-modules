@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28...3.31)
+cmake_minimum_required(VERSION 3.30...3.31)
 
 project(cmake-init-modulesExamples CXX)
 
@@ -8,7 +8,7 @@ if(PROJECT_IS_TOP_LEVEL)
   set(CMAKE_CXX_EXTENSIONS FALSE)
   set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
-  find_package(my_package 0.1 QUIET)
+  find_package(my_package 0.2 QUIET)
   if(NOT my_package_FOUND)
     message(STATUS "find_package(my_package) was NOT found, use as subproject ...")
     # test if the targets are usable if used as subproject
@@ -19,7 +19,7 @@ if(PROJECT_IS_TOP_LEVEL)
 endif()
 
 add_executable(app main.cpp)
-target_link_libraries(app PRIVATE Algo)
+target_link_libraries(app PRIVATE my_package::Algo)
 add_test(NAME app-tests COMMAND app)
 
 if(NOT PROJECT_IS_TOP_LEVEL)
@@ -27,7 +27,7 @@ if(NOT PROJECT_IS_TOP_LEVEL)
   # cmake-format: off
   add_test(NAME find-package-test
     COMMAND ${CMAKE_CTEST_COMMAND}
-      # --verbose
+      --verbose
       --output-on-failure
       -C $<CONFIG>
       --build-and-test
@@ -40,6 +40,7 @@ if(NOT PROJECT_IS_TOP_LEVEL)
           "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
           "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
           "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}"
+          # FIXME: needed for multi-type generators "--config $<CONFIG>"
   )
   # cmake-format: on
 endif()
