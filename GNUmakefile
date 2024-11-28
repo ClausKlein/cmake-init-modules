@@ -8,6 +8,7 @@ MAKEFLAGS+= --no-builtin-rules	# Disable the built-in implicit rules.
 
 # export CC=gcc-14
 # export CXX=g++-14
+# export LDFLAGS=
 export CC?=clang-19
 export CXX?=$(shell type -f clang++)
 export CMAKE_EXPORT_COMPILE_COMMANDS=YES
@@ -22,7 +23,7 @@ BUILD_TYPE=Debug
 .PHONY: all clean distclean check format test
 
 all: .init # conan
-	cmake --workflow --preset dev # XXX --fresh
+	cmake --workflow --preset dev --fresh
 	# FIXME: gcovr -v
 
 check: all

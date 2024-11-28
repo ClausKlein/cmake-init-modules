@@ -51,6 +51,17 @@ endmacro()
 #   target_disable_clang_tidy(fmt)
 # endif()
 
+include(FetchContent)
+FetchContent_Declare(
+  commonCompilerWarnings
+  GIT_REPOSITORY https://github.com/a4z/commonCompilerWarnings.git
+  GIT_TAG main
+  OVERRIDE_FIND_PACKAGE
+)
+find_package(commonCompilerWarnings CONFIG REQUIRED)
+
+# ...
+
 add_library(Algo SHARED)
 add_library(my_package::Algo ALIAS Algo)
 
@@ -66,6 +77,8 @@ target_sources(Algo
 # CMake requires the language standard to be specified as compile feature
 # when a target provides C++23 modules and the target will be installed
 target_compile_features(Algo PUBLIC cxx_std_23)
+
+target_link_libraries(Algo PUBLIC $<BUILD_INTERFACE:a4z::commonCompilerWarnings>)
 
 include(GenerateExportHeader)
 generate_export_header(Algo
