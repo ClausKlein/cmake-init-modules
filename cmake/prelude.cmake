@@ -1,4 +1,5 @@
 # ---- In-source guard ----
+include_guard()
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(
@@ -7,4 +8,9 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
       "Please read the BUILDING document before trying to build this project. "
       "You may need to delete 'CMakeCache.txt' and 'CMakeFiles/' first."
   )
+endif()
+
+if($ENV{CXX} MATCHES "clang" OR CMAKE_CXX_COMPILER MATCHES "clang")
+  set(ENV{CXXFLAGS} -stdlib=libc++)
+  message(STATUS "CXXFLAGS=-stdlib=libc++")
 endif()

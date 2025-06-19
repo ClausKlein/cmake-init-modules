@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28...3.31)
+cmake_minimum_required(VERSION 3.28...4.0)
 
 project(cmake-init-modulesTests LANGUAGES CXX)
 

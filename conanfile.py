@@ -8,8 +8,5 @@ class Recipe(ConanFile):
     def layout(self):
         self.folders.generators = "conan"
 
-    def requirements(self):
-        self.requires("fmt/10.2.1")
-
     def build_requirements(self):
-        self.test_requires("catch2/3.5.2")
+        self.test_requires("catch2/3.8.1")

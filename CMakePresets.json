@@ -1,8 +1,8 @@
 {
-  "version": 9,
+  "version": 8,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 30,
+    "minor": 28,
     "patch": 0
   },
   "configurePresets": [
@@ -32,7 +32,7 @@
           "value": "${sourceDir}/stagedir"
         },
         "CMAKE_EXPORT_COMPILE_COMMANDS": true,
-        "CMAKE_MESSAGE_LOG_LEVEL": "WARNING",
+        "CMAKE_MESSAGE_LOG_LEVEL": "STATUS",
         "CMAKE_VERIFY_INTERFACE_HEADER_SETS": true,
         "cmake-init-modules_DEVELOPER_MODE": true
       }
@@ -141,7 +141,7 @@
       "inherits": [
         "ci-std"
       ],
-      "generator": "Ninja Multi-Config",
+      "generator": "Ninja",
       "description": "This build is only available on Windows",
       "hidden": true,
       "cacheVariables": {
