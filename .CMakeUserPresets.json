@@ -80,8 +80,7 @@
       "jobs": 12,
       "targets": [
         "all",
-        "all_verify_interface_header_sets",
-        "install"
+        "all_verify_interface_header_sets"
       ]
     }
   ],

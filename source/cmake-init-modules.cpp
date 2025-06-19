@@ -1,11 +1,10 @@
+#include <format>
 #include <string>
 
 #include "cmake-init-modules/cmake-init-modules.hpp"
 
-#include <fmt/core.h>
-
 exported_class::exported_class()
-    : m_name {fmt::format("{}", "cmake-init-modules")}
+    : m_name {std::format("{}", "cmake-init-modules")}
 {
 }
 

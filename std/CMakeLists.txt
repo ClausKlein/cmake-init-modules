@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.30...3.31)
+cmake_minimum_required(VERSION 3.30...4.0)
 
 #
 # Set language version used

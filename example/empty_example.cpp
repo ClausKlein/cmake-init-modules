@@ -1,9 +1,9 @@
-#include <iostream>
+#include <print>
 
 #include <cmake-init-modules/cmake-init-modules.hpp>
 
 auto main() -> int
 {
-  std::cout << exported_class().name() << "\n";
+  std::println("{}", exported_class().name());
   return 0;
 }
