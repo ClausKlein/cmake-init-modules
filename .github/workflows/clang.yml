@@ -18,8 +18,8 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    container:
-      image: ghcr.io/mattkretz/cplusplus-ci/clang${{ matrix.version }}
+    # container:
+    #   image: ghcr.io/mattkretz/cplusplus-ci/clang${{ matrix.version }}
 
     steps:
       - uses: actions/checkout@v4
@@ -30,12 +30,13 @@ jobs:
       - name: Setup Cpp
         uses: aminya/setup-cpp@v1
         with:
+          compiler: llvm-{{ matrix.version }}
           cmake: 4.0.4
           ninja: 1.13.0
           gcovr: true
 
       - name: Run test suite
         env:
-          CXX: clang++
+          CXX: clang++-{{ matrix.version }}
           PATH: $HOME/.local/bin:$PATH
         run: make check
