@@ -10,11 +10,11 @@ MAKEFLAGS+= --no-builtin-rules	# Disable the built-in implicit rules.
 # Make assigns it a default value, usually g++.
 ifeq ($(origin CXX),default)
 LLVM_PREFIX := $(shell brew --prefix llvm)
-LLVM_ROOT := $(shell realpath $(LLVM_PREFIX))
-export CC := $(LLVM_ROOT)/bin/clang
-export CXX := $(LLVM_ROOT)/bin/clang++
+LLVM_PATH := $(shell realpath $(LLVM_PREFIX))
+export CC := $(LLVM_PATH)/bin/clang
+export CXX := $(LLVM_PATH)/bin/clang++
 export CXXFLAGS := -stdlib=libc++
-export LDFLAGS := -L$(LLVM_ROOT)/lib/c++ -lc++abi -lc++
+export LDFLAGS := -L$(LLVM_PATH)/lib/c++ -lc++abi -lc++
 export GCOV="llvm-cov gcov"
 endif
 

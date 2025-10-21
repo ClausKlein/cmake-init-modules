@@ -20,27 +20,27 @@ endif()
 
 if($ENV{CXX} MATCHES "clang" OR CMAKE_CXX_COMPILER MATCHES "clang")
     # see https://releases.llvm.org/19.1.0/projects/libcxx/docs/index.html
-    if(APPLE)
-        # Always use libc++
-        set(ENV{CXXFLAGS} -stdlib=libc++)
-        message(STATUS "CXXFLAGS=-stdlib=libc++")
+    # Always use libc++
+    set(ENV{CXXFLAGS} -stdlib=libc++)
+    message(STATUS "CXXFLAGS=-stdlib=libc++")
 
+    if(APPLE)
         execute_process(
             OUTPUT_VARIABLE LLVM_PREFIX
             COMMAND brew --prefix llvm
             COMMAND_ECHO STDOUT
             OUTPUT_STRIP_TRAILING_WHITESPACE
         )
-        file(REAL_PATH ${LLVM_PREFIX} LLVM_ROOT)
-        set(LLVM_ROOT ${LLVM_ROOT} CACHE FILEPATH "")
+        file(REAL_PATH ${LLVM_PREFIX} LLVM_PATH)
+        set(LLVM_PATH ${LLVM_PATH} CACHE FILEPATH "")
 
-        message(STATUS "LLVM_ROOT=${LLVM_ROOT}")
-        add_link_options(-L${LLVM_ROOT}/lib/c++)
-        include_directories(SYSTEM ${LLVM_ROOT}/include)
+        message(STATUS "LLVM_PATH=${LLVM_PATH}")
+        add_link_options(-L${LLVM_PATH}/lib/c++)
+        include_directories(SYSTEM ${LLVM_PATH}/include)
 
         if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2)
             set(CMAKE_CXX_STDLIB_MODULES_JSON
-                ${LLVM_ROOT}/lib/c++/libc++.modules.json
+                ${LLVM_PATH}/lib/c++/libc++.modules.json
             )
             # gersemi: off
             set(CACHE{CMAKE_CXX_STDLIB_MODULES_JSON}

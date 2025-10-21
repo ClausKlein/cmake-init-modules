@@ -30,13 +30,14 @@ jobs:
       - name: Setup Cpp
         uses: aminya/setup-cpp@v1
         with:
-          compiler: llvm-{{ matrix.version }}
+          compiler: llvm-${{ matrix.version }}
           cmake: 4.0.4
           ninja: 1.13.0
           gcovr: true
 
       - name: Run test suite
-        env:
-          CXX: clang++-{{ matrix.version }}
-          PATH: $HOME/.local/bin:$PATH
-        run: make check
+        # env:
+        #   CXX: clang++-${{ matrix.version }}
+        run: |
+          export PATH=$HOME/.local/bin:$PATH
+          make check
