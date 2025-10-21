@@ -41,6 +41,8 @@ check: all
 	perl -p -e 's/<hostSystemName>/${hostSystemName}/g;' .CMakeUserPresets.json > CMakeUserPresets.json
 	mkdir -p build/coverage/
 	$(CXX) --version
+	-$(CXX) -print-file-name=libc++.modules.json
+	-$(CXX) -print-file-name=libstdc++.modules.json
 	cmake --version
 	ninja --version
 	touch .init
@@ -60,7 +62,7 @@ format: distclean
 	codespell -w
 	git ls-files ::*.py | xargs black
 	git ls-files ::*CMakeLists.txt ::*.cmake ::*.cmake.in | xargs gersemi -i
-	git ls-files ::*.cxx ::*.cpp ::*.hpp ::*.cppm | xargs clang-format -i
+	git ls-files ::*.cxx ::*.cpp ::*.hpp ::*.cppm  ::*.json | xargs clang-format -i
 
 # Anything we don't know how to build will use this rule.
 # The command is a do-nothing command.
