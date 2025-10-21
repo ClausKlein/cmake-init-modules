@@ -6,11 +6,17 @@ MAKEFLAGS+= --no-builtin-rules	# Disable the built-in implicit rules.
 # MAKEFLAGS+= --warn-undefined-variables	# Warn when an undefined variable is referenced.
 # MAKEFLAGS+= --include-dir=$(CURDIR)/conan	# Search DIRECTORY for included makefiles (*.mk).
 
-export LDFLAGS=
-export CC?=gcc-15
-export CXX?=g++-15
-export CC?=clang-20
-export CXX?=$(shell type -f clang++)
+# CXX is a special variable in GNU Make. If not defined in the environment or Makefile,
+# Make assigns it a default value, usually g++.
+ifeq ($(origin CXX),default)
+LLVM_PREFIX := $(shell brew --prefix llvm)
+LLVM_ROOT := $(shell realpath $(LLVM_PREFIX))
+export CC := $(LLVM_ROOT)/bin/clang
+export CXX := $(LLVM_ROOT)/bin/clang++
+export CXXFLAGS := -stdlib=libc++
+export LDFLAGS := -L$(LLVM_ROOT)/lib/c++ -lc++abi -lc++
+export GCOV="llvm-cov gcov"
+endif
 
 export hostSystemName=$(shell uname)
 
@@ -21,17 +27,20 @@ BUILD_TYPE=Debug
 .PHONY: all clean distclean check format test
 
 all: .init clean # conan
-	cmake --workflow --preset dev --fresh
+	cmake --workflow --preset dev --fresh \
+	  # XXX --log-level=VERBOSE
 	# TODO(CK): gcovr -v
 
 check: all
 	-run-clang-tidy -p build/dev
 
 .init: .CMakeUserPresets.json
+	-pipx list
 	-pipx ensurepath
 	# TODO: jrsonnet --preserve-order CMakeUserPresets.jsonnet > CMakeUserPresets.json ||
 	perl -p -e 's/<hostSystemName>/${hostSystemName}/g;' .CMakeUserPresets.json > CMakeUserPresets.json
 	mkdir -p build/coverage/
+	$(CXX) --version
 	cmake --version
 	ninja --version
 	touch .init
@@ -50,7 +59,7 @@ distclean: clean
 format: distclean
 	codespell -w
 	git ls-files ::*.py | xargs black
-	git ls-files ::*CMakeLists.txt ::*.cmake ::*.cmake.in | xargs cmake-format -i
+	git ls-files ::*CMakeLists.txt ::*.cmake ::*.cmake.in | xargs gersemi -i
 	git ls-files ::*.cxx ::*.cpp ::*.hpp ::*.cppm | xargs clang-format -i
 
 # Anything we don't know how to build will use this rule.

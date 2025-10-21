@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28...4.0)
+cmake_minimum_required(VERSION 3.28...4.2)
 
 project(cmake-init-modulesTests LANGUAGES CXX)
 
@@ -7,8 +7,8 @@ include(../cmake/folders.cmake)
 # ---- Dependencies ----
 
 if(PROJECT_IS_TOP_LEVEL)
-  find_package(cmake-init-modules REQUIRED)
-  enable_testing()
+    find_package(cmake-init-modules 0.2.0 EXACT REQUIRED)
+    enable_testing()
 endif()
 
 find_package(Catch2 REQUIRED)
@@ -18,7 +18,8 @@ include(Catch)
 
 add_executable(cmake-init-modules_test source/cmake-init-modules_test.cpp)
 target_link_libraries(
-  cmake-init-modules_test PRIVATE cmake-init-modules::cmake-init-modules Catch2::Catch2WithMain
+    cmake-init-modules_test
+    PRIVATE cmake-init-modules::cmake-init-modules Catch2::Catch2WithMain
 )
 target_compile_features(cmake-init-modules_test PRIVATE cxx_std_23)
 

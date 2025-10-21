@@ -5,6 +5,9 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ develop ]
+  workflow_dispatch:
+  schedule:
+    - cron: '30 15 * * 6'
 
 jobs:
   gcc:
@@ -27,8 +30,9 @@ jobs:
       - name: Setup Cpp
         uses: aminya/setup-cpp@v1
         with:
-          cmake: true
-          ninja: true
+          cmake: 4.0.4
+          ninja: 1.13.0
+          gcovr: true
 
       - name: Run test suite
         env:

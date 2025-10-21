@@ -62,10 +62,9 @@ jobs:
         vcvarsall: ${{ contains(matrix.os, 'windows') }}
         clangformat: true
         clangtidy: true
-        cmake: true
+        cmake: 4.0.4
+        ninja: 1.13.0
         gcovr: true
-        ninja: true
-        # ...
 
     - name: Configure
       run: cmake --preset=ci-coverage
@@ -107,10 +106,9 @@ jobs:
         vcvarsall: ${{ contains(matrix.os, 'windows') }}
         clangformat: true
         clangtidy: true
-        cmake: true
+        cmake: 4.0.4
+        ninja: 1.13.0
         gcovr: true
-        ninja: true
-        # ...
 
     - name: Configure
       run: cmake --preset=ci-sanitize
@@ -164,9 +162,8 @@ jobs:
       if: matrix.os == 'macos-15'
       run: |
         brew install gcovr cmake ninja llvm
-        echo $(brew --prefix llvm@20)/bin
-        echo 'export PATH="/usr/local/opt/llvm/bin:$PATH"' >> ~/.profile
         export PATH=$(brew --prefix llvm@20)/bin:$PATH && echo "PATH=$PATH" >> $GITHUB_ENV
+        export LDFLAGS=-L$(brew --prefix llvm@20)/lib/c++ -lc++abi -lc++ && echo "LDFLAGS=$LDFLAGS" >> $GITHUB_ENV
         echo "CXX=clang++" >> $GITHUB_ENV
 
     - name: Setup Cpp
@@ -177,28 +174,30 @@ jobs:
         vcvarsall: ${{ contains(matrix.os, 'windows') }}
         clangformat: true
         clangtidy: true
-        cmake: true
+        cmake: 4.0.3
+        ninja: 1.13.0
         gcovr: true
-        ninja: true
-        # ...
 
     - name: Setup MultiToolTask
       if: matrix.os == 'windows-2022'
       run: |
         Add-Content "$env:GITHUB_ENV" 'UseMultiToolTask=true'
         Add-Content "$env:GITHUB_ENV" 'EnforceProcessCountAcrossBuilds=true'
+        Add-Content "$env:GITHUB_PATH" "$(Get-Location)\stagedir\bin"
 
-    - name: Setup PATH
+    - name: update cmake and ninja
       if: matrix.os == 'windows-2022'
-      run: Add-Content "$env:GITHUB_PATH" "$(Get-Location)\stagedir\bin"
+      run: pip install cmake ninja
 
     - name: Run workflow preset
       shell: bash
       run: |
         export hostSystemName=${{ matrix.uname }}
-        uname || echo ${hostSystemName}
         perl -p -e "s/<hostSystemName>/${hostSystemName}/g;" .CMakeUserPresets.json > CMakeUserPresets.json
-        cmake --workflow --preset=dev  # XXX "--preset=ci-$("${{ matrix.os }}".split("-")[0])"
+        uname || echo ${hostSystemName}
+        cmake --version
+        ninja --version
+        cmake --workflow --preset=dev
 
   docs:
     # Deploy docs only when builds succeed

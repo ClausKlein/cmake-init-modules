@@ -9,4 +9,4 @@ class Recipe(ConanFile):
         self.folders.generators = "conan"
 
     def build_requirements(self):
-        self.test_requires("catch2/3.8.1")
+        self.test_requires("catch2/3.11.0")

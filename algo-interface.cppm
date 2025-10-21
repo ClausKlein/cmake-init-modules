@@ -1,9 +1,13 @@
 module;
 
-#include <string>  // for string
-#include <utility>  // for move
-
 #include <algo_export.h>  // <-- Generated header added to the global fragment
+
+#ifdef HAS_IMPORT_STD
+import std;
+#else
+#  include <string>  // for string
+#  include <utility>  // for move
+#endif
 
 export module algo;  // <-- Annotation not currently required, but see discussion below
 
