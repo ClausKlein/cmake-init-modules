@@ -10,19 +10,21 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
     )
 endif()
 
+# gersemi: off
 if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.0)
-    set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD
-        "d0edc3af-4c50-42ea-a356-e2862fe7a444"
-    )
+    set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
+else()
+    set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "0e5b6991-d74f-4b3d-a41c-cf096e0b2508")
 endif()
+# gersemi: on
 
 if($ENV{CXX} MATCHES "clang" OR CMAKE_CXX_COMPILER MATCHES "clang")
-    set(ENV{CXXFLAGS} -stdlib=libc++)
-    message(STATUS "CXXFLAGS=-stdlib=libc++")
-
-    # see https://releases.llvm.org/20.0.0/projects/libcxx/docs/ReleaseNotes.html
-    # Always use libc++
+    # see https://releases.llvm.org/19.1.0/projects/libcxx/docs/index.html
     if(APPLE)
+        # Always use libc++
+        set(ENV{CXXFLAGS} -stdlib=libc++)
+        message(STATUS "CXXFLAGS=-stdlib=libc++")
+
         execute_process(
             OUTPUT_VARIABLE LLVM_PREFIX
             COMMAND brew --prefix llvm

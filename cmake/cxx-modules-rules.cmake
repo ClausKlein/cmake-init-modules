@@ -28,8 +28,10 @@ if(CMAKE_GENERATOR STREQUAL "Ninja")
         set(ALGO_USE_MODULES ON)
         string(APPEND CMAKE_CXX_MODULE_MAP_FLAG " -fmodules-reduced-bmi")
 
-        add_compile_options($ENV{CXXFLAGS})
-        add_link_options($ENV{CXXFLAGS})
+        if(APPLE)
+            add_compile_options($ENV{CXXFLAGS})
+            add_link_options($ENV{CXXFLAGS})
+        endif()
     elseif(
         CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
         AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 15.0
