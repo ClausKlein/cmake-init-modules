@@ -18,7 +18,11 @@
       },
       "trace": {
         "mode": "expand",
-        "source": "Clang-CXX-CXXImportStd.cmake"
+        "source": [
+          "CMakeDetermineCompilerSupport.cmake",
+          "CMakeDetermineCompilerId.cmake",
+          "Clang-CXX-CXXImportStd.cmake"
+        ]
       },
       "errors": {
         "dev": false,

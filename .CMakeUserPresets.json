@@ -1,5 +1,5 @@
 {
-  "version": 6,
+  "version": 8,
   "cmakeMinimumRequired": {
     "major": 3,
     "minor": 28,
@@ -55,7 +55,15 @@
     },
     {
       "name": "dev",
-      "inherits": "dev-<hostSystemName>"
+      "inherits": "dev-<hostSystemName>",
+      "trace": {
+        "mode": "expand",
+        "source": [
+          "CMakeDetermineCompilerSupport.cmake",
+          "CMakeDetermineCompilerId.cmake",
+          "Clang-CXX-CXXImportStd.cmake"
+        ]
+      }
     },
     {
       "name": "dev-coverage",
