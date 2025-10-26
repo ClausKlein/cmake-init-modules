@@ -12,7 +12,6 @@ include(GNUInstallDirs)
 # find_package(<package>) call for consumers to find this project
 set(package cmake-init-modules)
 
-# cmake-format: off
 install(
     TARGETS cmake-init-modules_cmake-init-modules
     EXPORT cmake-init-modulesTargets
@@ -24,7 +23,6 @@ install(
     INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
     FILE_SET HEADERS
 )
-# cmake-format: on
 
 write_basic_package_version_file(
     "${package}ConfigVersion.cmake"

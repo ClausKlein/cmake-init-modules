@@ -41,8 +41,8 @@ check: all
 	perl -p -e 's/<hostSystemName>/${hostSystemName}/g;' .CMakeUserPresets.json > CMakeUserPresets.json
 	mkdir -p build/coverage/
 	$(CXX) --version
-	-$(CXX) -print-file-name=libc++.modules.json
-	-$(CXX) -print-file-name=libstdc++.modules.json
+	$(CXX) -print-file-name=libc++.modules.json
+	$(CXX) -print-file-name=libstdc++.modules.json
 	cmake --version
 	ninja --version
 	touch .init
