@@ -13,28 +13,28 @@ endif()
 
 include(cmake/cxx-modules-rules.cmake)
 
-include(FetchContent)
-FetchContent_Declare(
-    commonCompilerWarnings
-    GIT_REPOSITORY https://github.com/a4z/commonCompilerWarnings.git
-    GIT_TAG main
-    OVERRIDE_FIND_PACKAGE
-)
-# XXX find_package(commonCompilerWarnings CONFIG REQUIRED)
-
-FetchContent_Declare(
-    Catch2
-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG v3.11.0
-    EXCLUDE_FROM_ALL
-    SYSTEM
-    OVERRIDE_FIND_PACKAGE
-    # FIXME: FIND_PACKAGE_ARGS 3.11.0
-)
+# include(FetchContent)
+# FetchContent_Declare(
+#     commonCompilerWarnings
+#     GIT_REPOSITORY https://github.com/a4z/commonCompilerWarnings.git
+#     GIT_TAG main
+#     OVERRIDE_FIND_PACKAGE
+# )
+# # XXX find_package(commonCompilerWarnings CONFIG REQUIRED)
+#
+# FetchContent_Declare(
+#     Catch2
+#     GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+#     GIT_TAG v3.11.0
+#     EXCLUDE_FROM_ALL
+#     SYSTEM
+#     OVERRIDE_FIND_PACKAGE
+#     # FIXME: FIND_PACKAGE_ARGS 3.11.0
+# )
 
 if(ALGO_USE_MODULES)
     ##################################################
-    add_library(Algo SHARED)
+    add_library(Algo)
     add_library(my_package::Algo ALIAS Algo)
     target_sources(
         Algo
@@ -80,7 +80,7 @@ if(ALGO_USE_MODULES)
             # ... a few details omitted, see the "Deep CMake For Library Authors" talk
             FILE_SET CXX_MODULES
             # There's currently no convention for this location, see discussion below
-            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/my_package/src
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/my_package/modules
             CXX_MODULES_BMI
                 DESTINATION
                     ${CMAKE_INSTALL_LIBDIR}/cmake/my_package/bmi-${CMAKE_CXX_COMPILER_ID}_$<CONFIG>
