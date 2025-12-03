@@ -20,7 +20,7 @@ _deps/fmt-build/libfmtd.10.2.1.dylib -install_name @rpath/libfmtd.10.dylib _deps
 [4/4] /usr/local/bin/cmake -E cmake_symlink_library _deps/fmt-build/libfmtd.10.2.1.dylib  _deps/fmt-build/libfmtd.10.dylib
 _deps/fmt-build/libfmtd.dylib && :
 
-bash-5.2$ ninja -v Algo 
+bash-5.2$ ninja -v Algo
 
 [1/2] /usr/local/opt/llvm/bin/clang++ -DAlgo_EXPORTS -DFMT_HEADER_ONLY=1
 -I/Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/build/dev -isystem
@@ -33,14 +33,14 @@ bash-5.2$ ninja -v Algo
 CMakeFiles/Algo.dir/algo-impl.cpp.o.d @CMakeFiles/Algo.dir/algo-impl.cpp.o.modmap -o CMakeFiles/Algo.dir/algo-impl.cpp.o -c
 /Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/algo-impl.cpp
 
-FAILED: CMakeFiles/Algo.dir/algo-impl.cpp.o 
+FAILED: CMakeFiles/Algo.dir/algo-impl.cpp.o
 /usr/local/opt/llvm/bin/clang++ -DAlgo_EXPORTS -DFMT_HEADER_ONLY=1 -I/Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/build/dev -isystem /Users/clausklein/.cache/CPM/fmt/c3ebf53335b44df838d9982d1a0e35afe190e34f/include -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wcast-qual -Wformat=2 -Wundef -Werror=float-equal -Wshadow -Wcast-align -Wunused -Wnull-dereference -Wdouble-promotion -Wimplicit-fallthrough -Wextra-semi -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast -g -std=c++20 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -fPIC -fvisibility=hidden -fvisibility-inlines-hidden -MD -MT CMakeFiles/Algo.dir/algo-impl.cpp.o -MF CMakeFiles/Algo.dir/algo-impl.cpp.o.d @CMakeFiles/Algo.dir/algo-impl.cpp.o.modmap -o CMakeFiles/Algo.dir/algo-impl.cpp.o -c /Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/algo-impl.cpp
 /Users/clausklein/Workspace/cpp/cxx20/cmake-init-modules/algo-impl.cpp:8:8: fatal error: module 'fmt' not found
     8 | import fmt;
       | ~~~~~~~^~~
 1 error generated.
 ninja: build stopped: subcommand failed.
-bash-5.2$ 
+bash-5.2$
 
 bash-5.2$ tree _deps/
 _deps/
@@ -63,7 +63,7 @@ _deps/
     `-- libfmtd.dylib -> libfmtd.10.dylib
 
 6 directories, 12 files
-bash-5.2$ 
+bash-5.2$
 
 bash-5.2$ clang-format -i *.json
 bash-5.2$ head -50  *.ddi *.json *.modmap
@@ -176,7 +176,7 @@ bash-5.2$ head -50  *.ddi *.json *.modmap
 -x c++-module
 -fmodule-output=CMakeFiles/Algo.dir/algo.pcm
 bash-5.2$ !tree
-tree 
+tree
 .
 |-- CXX.dd
 |-- CXXDependInfo.json
@@ -191,5 +191,4 @@ tree
 `-- algo.pcm
 
 1 directory, 11 files
-bash-5.2$ 
-
+bash-5.2$

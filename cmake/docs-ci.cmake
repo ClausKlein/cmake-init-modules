@@ -16,7 +16,7 @@ if(NOT IS_DIRECTORY "${mcss_SOURCE_DIR}")
     file(
         DOWNLOAD
             https://github.com/friendlyanon/m.css/releases/download/release-1/mcss.zip
-            "${mcss_SOURCE_DIR}/mcss.zip"
+        "${mcss_SOURCE_DIR}/mcss.zip"
         STATUS status
         EXPECTED_MD5 00cd2757ebafb9bcba7f5d399b3bec7f
     )

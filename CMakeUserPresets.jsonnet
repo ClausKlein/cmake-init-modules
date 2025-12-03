@@ -181,4 +181,3 @@ local pp_generator(arch, type, link_mode, config) =
   packagePresets: [] + [pp_generator(arch, type, link_mode, config) for arch in archs for type in types for link_mode in link_modes for config in configs],
   workflowPresets: [] + [wp_generator(arch, type, link_mode, config) for arch in archs for type in types for link_mode in link_modes for config in configs],
 }
-
