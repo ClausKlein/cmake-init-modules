@@ -6,19 +6,31 @@ MAKEFLAGS+= --no-builtin-rules	# Disable the built-in implicit rules.
 # MAKEFLAGS+= --warn-undefined-variables	# Warn when an undefined variable is referenced.
 # MAKEFLAGS+= --include-dir=$(CURDIR)/conan	# Search DIRECTORY for included makefiles (*.mk).
 
-# CXX is a special variable in GNU Make. If not defined in the environment or Makefile,
-# Make assigns it a default value, usually g++.
-ifeq ($(origin CXX),default)
-LLVM_PREFIX := $(shell brew --prefix llvm)
-LLVM_PATH := $(shell realpath $(LLVM_PREFIX))
-export CC := $(LLVM_PATH)/bin/clang
-export CXX := $(LLVM_PATH)/bin/clang++
-export CXXFLAGS := -stdlib=libc++
-export LDFLAGS := -L$(LLVM_PATH)/lib/c++ -lc++abi -lc++
-export GCOV="llvm-cov gcov"
-endif
-
 export hostSystemName=$(shell uname)
+
+ifeq (${hostSystemName},Darwin)
+  export LLVM_PREFIX=$(shell brew --prefix llvm)
+  export LLVM_DIR=$(shell realpath ${LLVM_PREFIX})
+  export PATH:=${LLVM_DIR}/bin:${PATH}
+
+  export CMAKE_CXX_STDLIB_MODULES_JSON=${LLVM_DIR}/lib/c++/libc++.modules.json
+  export CXX=clang++
+  export LDFLAGS=-L$(LLVM_DIR)/lib/c++ -lc++abi -lc++ -lc++experimental
+  export GCOV="llvm-cov gcov"
+
+  ### TODO: to test g++-15:
+  export GCC_PREFIX=$(shell brew --prefix gcc)
+  export GCC_DIR=$(shell realpath ${GCC_PREFIX})
+
+  # export CMAKE_CXX_STDLIB_MODULES_JSON=${GCC_DIR}/lib/gcc/current/libstdc++.modules.json
+  # export CXX:=g++-15
+  # export CXXFLAGS:=-stdlib=libstdc++
+  # export GCOV="gcov"
+else ifeq (${hostSystemName},Linux)
+  export LLVM_DIR=/usr/lib/llvm-20
+  export PATH:=${LLVM_DIR}/bin:${PATH}
+  export CXX=clang++-20
+endif
 
 CONAN_HOME=$(shell conan config home)
 # BUILD_TYPE=Release
@@ -65,6 +77,5 @@ format: distclean
 	git ls-files ::*.cxx ::*.cpp ::*.hpp ::*.cppm  ::*.json | xargs clang-format -i
 
 # Anything we don't know how to build will use this rule.
-# The command is a do-nothing command.
-#
-% :: ;
+% ::
+	ninja -C build $(@)

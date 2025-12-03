@@ -1,6 +1,25 @@
 # Building with CMake
 
-## Dependencies
+## Prerequisites
+
+### Install pre-commit and update cmake
+
+```sh
+pipx install cmake
+pipx install pre-commit
+pre-commit install --install-hooks
+```
+
+### Optional install jsonet
+
+```sh
+git clone https://github.com/CertainLach/jrsonnet.git
+cd jrsonnet
+cargo build --release
+cp target/release/jrsonnet $HOME/.local/bin/
+```
+
+## Build Dependencies
 
 For a list of dependencies, please refer to [conanfile.py](conanfile.py).
 
