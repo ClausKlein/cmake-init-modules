@@ -16,14 +16,16 @@ set(CMAKE_DEBUG_POSTFIX _debug)
 # This property setting also needs to be consistent between the
 # installed shared library and its consumer, otherwise most
 # toolchains will once again reject the consumer's generated BMI.
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_EXTENSIONS ON)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if(NOT DEFINED CMAKE_CXX_STANDARD)
+    set(CMAKE_CXX_STANDARD 23)
+    set(CMAKE_CXX_EXTENSIONS ON)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
 
 if(CMAKE_GENERATOR STREQUAL "Ninja")
     if(
         CMAKE_CXX_COMPILER_ID STREQUAL "Clang"
-        AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 20.0
+        AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 19.0
     )
         set(ALGO_USE_MODULES ON)
         string(APPEND CMAKE_CXX_MODULE_MAP_FLAG " -fmodules-reduced-bmi")
@@ -50,7 +52,7 @@ endif()
 # Tell CMake that we explicitly want `import std`.
 # This will initialize the property on all targets declared after this to 1
 message(STATUS "CMAKE_CXX_COMPILER_IMPORT_STD=${CMAKE_CXX_COMPILER_IMPORT_STD}")
-if(23 IN_LIST CMAKE_CXX_COMPILER_IMPORT_STD)
+if(${CMAKE_CXX_STANDARD} IN_LIST CMAKE_CXX_COMPILER_IMPORT_STD)
     set(CMAKE_CXX_MODULE_STD ON)
     message(STATUS "CMAKE_CXX_MODULE_STD=${CMAKE_CXX_MODULE_STD}")
 endif()

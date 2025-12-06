@@ -1,11 +1,16 @@
-cmake_minimum_required(VERSION 3.28...4.2)
+# CMake 3.30 is required for C++23 `import std` support;
+cmake_minimum_required(VERSION 3.30...4.2)
 
 include(cmake/prelude.cmake)
 
+#==================================================
 project(my_package VERSION 0.2.0 LANGUAGES CXX)
+#==================================================
 
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
+
+set(CMAKE_SKIP_TEST_ALL_DEPENDENCY NO)
 
 if(PROJECT_IS_TOP_LEVEL)
     include(cmake/AddUninstallTarget.cmake)

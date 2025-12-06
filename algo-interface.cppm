@@ -9,9 +9,9 @@ import std;
 #  include <utility>  // for move
 #endif
 
-export module algo;  // <-- Annotation not currently required, but see discussion below
+export module algo;
 
-export class ALGO_EXPORT Algo  // <-- ALGO_EXPORT annotation added to the class definition
+export class ALGO_EXPORT Algo
 {
 public:
   explicit Algo(std::string name)

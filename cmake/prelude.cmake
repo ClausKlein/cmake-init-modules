@@ -11,10 +11,8 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
 endif()
 
 # gersemi: off
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.0)
+if(CMAKE_VERSION VERSION_EQUAL 4.2)
     set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
-else()
-    set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "0e5b6991-d74f-4b3d-a41c-cf096e0b2508")
 endif()
 # gersemi: on
 
@@ -31,16 +29,16 @@ if($ENV{CXX} MATCHES "clang" OR CMAKE_CXX_COMPILER MATCHES "clang")
             COMMAND_ECHO STDOUT
             OUTPUT_STRIP_TRAILING_WHITESPACE
         )
-        file(REAL_PATH ${LLVM_PREFIX} LLVM_PATH)
-        set(LLVM_PATH ${LLVM_PATH} CACHE FILEPATH "")
+        file(REAL_PATH ${LLVM_PREFIX} LLVM_DIR)
+        set(LLVM_DIR ${LLVM_DIR} CACHE FILEPATH "")
 
-        message(STATUS "LLVM_PATH=${LLVM_PATH}")
-        add_link_options(-L${LLVM_PATH}/lib/c++)
-        include_directories(SYSTEM ${LLVM_PATH}/include)
+        message(STATUS "LLVM_DIR=${LLVM_DIR}")
+        add_link_options(-L${LLVM_DIR}/lib/c++)
+        include_directories(SYSTEM ${LLVM_DIR}/include)
 
         if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2)
             set(CMAKE_CXX_STDLIB_MODULES_JSON
-                ${LLVM_PATH}/lib/c++/libc++.modules.json
+                ${LLVM_DIR}/lib/c++/libc++.modules.json
             )
             # gersemi: off
             set(CACHE{CMAKE_CXX_STDLIB_MODULES_JSON}

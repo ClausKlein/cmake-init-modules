@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28...4.2)
+cmake_minimum_required(VERSION 3.30...4.2)
 
 include(../cmake/prelude.cmake)
 
@@ -58,7 +58,7 @@ if(NOT ALGO_USE_MODULES)
     include(../cmake/folders.cmake)
 
     if(PROJECT_IS_TOP_LEVEL)
-        find_package(cmake-init-modules 0.2 REQUIRED)
+        find_package(cmake-init-modules 0.2.0 EXACT REQUIRED)
     endif()
 
     add_custom_target(run-examples)

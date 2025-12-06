@@ -5,6 +5,7 @@ repos:
     rev: v6.0.0
     hooks:
     -   id: trailing-whitespace
+        exclude: ^(fmt|\.bumpversion)\.(patch|diff|cfg)$
     -   id: end-of-file-fixer
     -   id: check-yaml
         exclude: ^\.clang-(format|tidy)$
@@ -14,14 +15,14 @@ repos:
   # This brings in a portable version of clang-format.
   # See also: https://github.com/ssciwr/clang-format-wheel
   - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: v21.1.6
+    rev: v21.1.7
     hooks:
     - id: clang-format
       types_or: [c++, c, json]
 
   # CMake linting and formatting
   - repo: https://github.com/BlankSpruce/gersemi
-    rev: 0.23.1
+    rev: 0.23.2
     hooks:
     - id: gersemi
       name: CMake linting
@@ -29,7 +30,6 @@ repos:
 
   # Markdown linting
   # Config file: .markdownlint.yaml
-  # Uncomment to enable markdown linting.
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.46.0
     hooks:
