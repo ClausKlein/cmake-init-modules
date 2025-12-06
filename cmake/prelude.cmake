@@ -39,14 +39,16 @@ if($ENV{CXX} MATCHES "clang" OR CMAKE_CXX_COMPILER MATCHES "clang")
         set(CMAKE_CXX_STDLIB_MODULES_JSON
             ${LLVM_DIR}/lib/c++/libc++.modules.json
         )
-    elseif(LINUX)
+    elseif(LINUX AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 21.0)
         execute_process(
             OUTPUT_VARIABLE LLVM_MODULES
             COMMAND clang++ -print-file-name=c++/libc++.modules.json
             COMMAND_ECHO STDOUT
             OUTPUT_STRIP_TRAILING_WHITESPACE
         )
-        file(REAL_PATH ${LLVM_MODULES} CMAKE_CXX_STDLIB_MODULES_JSON)
+        if(NOT DEFINED CMAKE_CXX_STDLIB_MODULES_JSON AND EXISTS ${LLVM_MODULES})
+            set(CMAKE_CXX_STDLIB_MODULES_JSON ${LLVM_MODULES})
+        endif()
         message(
             STATUS
             "CMAKE_CXX_STDLIB_MODULES_JSON=${CMAKE_CXX_STDLIB_MODULES_JSON}"
