@@ -46,7 +46,7 @@ if($ENV{CXX} MATCHES "clang" OR CMAKE_CXX_COMPILER MATCHES "clang")
             COMMAND_ECHO STDOUT
             OUTPUT_STRIP_TRAILING_WHITESPACE
         )
-        if(NOT DEFINED CMAKE_CXX_STDLIB_MODULES_JSON AND EXISTS ${LLVM_MODULES})
+        if(NOT CMAKE_CXX_STDLIB_MODULES_JSON)
             set(CMAKE_CXX_STDLIB_MODULES_JSON ${LLVM_MODULES})
         endif()
         message(
@@ -55,11 +55,13 @@ if($ENV{CXX} MATCHES "clang" OR CMAKE_CXX_COMPILER MATCHES "clang")
         )
     endif()
 
-    # gersemi: off
-    set(CACHE{CMAKE_CXX_STDLIB_MODULES_JSON}
-        TYPE FILEPATH
-        VALUE ${CMAKE_CXX_STDLIB_MODULES_JSON}
-        HELP "Result of: clang++ -print-file-name=c++/libc++.modules.json"
-    )
-    # gersemi: on
+    if(EXISTS ${CMAKE_CXX_STDLIB_MODULES_JSON})
+        # gersemi: off
+        set(CACHE{CMAKE_CXX_STDLIB_MODULES_JSON}
+            TYPE FILEPATH
+            HELP "Result of: clang++ -print-file-name=c++/libc++.modules.json"
+            VALUE ${CMAKE_CXX_STDLIB_MODULES_JSON}
+        )
+        # gersemi: on
+    endif()
 endif()
