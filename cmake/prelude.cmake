@@ -36,17 +36,28 @@ if($ENV{CXX} MATCHES "clang" OR CMAKE_CXX_COMPILER MATCHES "clang")
         add_link_options(-L${LLVM_DIR}/lib/c++)
         include_directories(SYSTEM ${LLVM_DIR}/include)
 
-        if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2)
-            set(CMAKE_CXX_STDLIB_MODULES_JSON
-                ${LLVM_DIR}/lib/c++/libc++.modules.json
-            )
-            # gersemi: off
-            set(CACHE{CMAKE_CXX_STDLIB_MODULES_JSON}
-                TYPE FILEPATH
-                VALUE ${CMAKE_CXX_STDLIB_MODULES_JSON}
-                HELP "Result of: clang++ -print-file-name=c++/libc++.modules.json"
-            )
-            # gersemi: on
-        endif()
+        set(CMAKE_CXX_STDLIB_MODULES_JSON
+            ${LLVM_DIR}/lib/c++/libc++.modules.json
+        )
+    elseif(LINUX)
+        execute_process(
+            OUTPUT_VARIABLE LLVM_MODULES
+            COMMAND clang++ -print-file-name=c++/libc++.modules.json
+            COMMAND_ECHO STDOUT
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        file(REAL_PATH ${LLVM_MODULES} CMAKE_CXX_STDLIB_MODULES_JSON)
+        message(
+            STATUS
+            "CMAKE_CXX_STDLIB_MODULES_JSON=${CMAKE_CXX_STDLIB_MODULES_JSON}"
+        )
     endif()
+
+    # gersemi: off
+    set(CACHE{CMAKE_CXX_STDLIB_MODULES_JSON}
+        TYPE FILEPATH
+        VALUE ${CMAKE_CXX_STDLIB_MODULES_JSON}
+        HELP "Result of: clang++ -print-file-name=c++/libc++.modules.json"
+    )
+    # gersemi: on
 endif()

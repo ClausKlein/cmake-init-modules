@@ -2,13 +2,16 @@ name: Continuous Integration
 
 on:
   push:
-    branches:
-    - master
-    - develop
-
+    branches: [ main, develop ]
   pull_request:
-    branches:
-    - develop
+    branches: [ develop ]
+  workflow_dispatch:
+  schedule:
+    - cron: "30 15 * * 0"  # Every Sunday at 15:30 UTC
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint:
@@ -47,9 +50,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install LCov
-      run: sudo apt-get update -q
-        && sudo apt-get install lcov -q -y
+    # - name: Install LCov
+    #   run: sudo apt-get update -q
+    #     && sudo apt-get install lcov -q -y
 
     - name: Install Python
       uses: actions/setup-python@v5
@@ -62,7 +65,7 @@ jobs:
         vcvarsall: ${{ contains(matrix.os, 'windows') }}
         clangformat: true
         clangtidy: true
-        cmake: 4.0.4
+        cmake: 4.2.0
         ninja: 1.13.0
         gcovr: true
 
@@ -73,8 +76,9 @@ jobs:
       run: cmake --build build/coverage -j 2
 
     - name: Test
-      working-directory: build/coverage
-      run: ctest --output-on-failure --no-tests=error -j 2
+      run: |
+        cmake --install build/coverage --prefix $PWD/stagedir
+        ctest --test-dir build/coverage --output-on-failure --no-tests=error -j 2
 
     - name: Process coverage info
       # run: cmake --build build/coverage -t coverage
@@ -106,7 +110,7 @@ jobs:
         vcvarsall: ${{ contains(matrix.os, 'windows') }}
         clangformat: true
         clangtidy: true
-        cmake: 4.0.4
+        cmake: 4.2.0
         ninja: 1.13.0
         gcovr: true
 
@@ -117,7 +121,6 @@ jobs:
       run: cmake --build build/sanitize -j 2
 
     - name: Test
-      working-directory: build/sanitize
       env:
         ASAN_OPTIONS: "strict_string_checks=1:\
           detect_stack_use_after_return=1:\
@@ -125,7 +128,9 @@ jobs:
           strict_init_order=1:\
           detect_leaks=1"
         UBSAN_OPTIONS: print_stacktrace=1
-      run: ctest --output-on-failure --no-tests=error -j 2
+      run: |
+        cmake --install build/sanitize --prefix $PWD/stagedir
+        ctest --test-dir build/sanitize --output-on-failure --no-tests=error -j 2
 
   test:
     needs: [lint]
@@ -158,12 +163,12 @@ jobs:
       uses: actions/setup-python@v5
       with: { python-version: "3.13" }
 
-    - name: Install llvm-20
+    - name: Install llvm
       if: matrix.os == 'macos-15'
       run: |
         brew install gcovr cmake ninja llvm
-        export PATH=$(brew --prefix llvm@20)/bin:$PATH && echo "PATH=$PATH" >> $GITHUB_ENV
-        export LDFLAGS=-L$(brew --prefix llvm@20)/lib/c++ -lc++abi -lc++ && echo "LDFLAGS=$LDFLAGS" >> $GITHUB_ENV
+        export PATH=$(brew --prefix llvm)/bin:$PATH && echo "PATH=$PATH" >> $GITHUB_ENV
+        export LDFLAGS=-L$(brew --prefix llvm)/lib/c++ -lc++abi -lc++ && echo "LDFLAGS=$LDFLAGS" >> $GITHUB_ENV
         echo "CXX=clang++" >> $GITHUB_ENV
 
     - name: Setup Cpp
@@ -174,7 +179,7 @@ jobs:
         vcvarsall: ${{ contains(matrix.os, 'windows') }}
         clangformat: true
         clangtidy: true
-        cmake: 4.0.3
+        cmake: 4.2.0
         ninja: 1.13.0
         gcovr: true
 

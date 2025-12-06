@@ -25,7 +25,7 @@ if(ALGO_USE_MODULES)
     add_test(NAME app-tests COMMAND app)
 endif()
 
-if(NOT PROJECT_IS_TOP_LEVEL)
+if(NOT PROJECT_IS_TOP_LEVEL AND CMAKE_BUILD_TYPE STREQUAL Release)
     # test if the targets are usable from the install directory
     add_test(
         NAME install-to-stagedir
@@ -48,6 +48,7 @@ if(NOT PROJECT_IS_TOP_LEVEL)
             --build-options #
             "-D CMAKE_BUILD_TYPE=$<CONFIG>"
             "-D CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
+            "-D CMAKE_CXX_STDLIB_MODULES_JSON=${CMAKE_CXX_STDLIB_MODULES_JSON}"
             "-D CMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}"
             "-D CMAKE_PREFIX_PATH=${CMAKE_BINARY_DIR}/stagedir"
     )

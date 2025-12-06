@@ -168,7 +168,7 @@
       "hidden": true,
       "cacheVariables": {
         "ENABLE_COVERAGE": true,
-        "CMAKE_SKIP_INSTALL_RULES": true,
+        "CMAKE_SKIP_INSTALL_RULES": false,
         "CMAKE_BUILD_TYPE": "Coverage",
         "CMAKE_CXX_FLAGS_COVERAGE":
             "-Og -g --coverage -fkeep-inline-functions -fkeep-static-functions",
@@ -186,7 +186,7 @@
       "hidden": true,
       "cacheVariables": {
         "ENABLE_COVERAGE": true,
-        "CMAKE_SKIP_INSTALL_RULES": true,
+        "CMAKE_SKIP_INSTALL_RULES": false,
         "CMAKE_BUILD_TYPE": "Coverage",
         "CMAKE_CXX_FLAGS_COVERAGE": "-Og -g --coverage",
         "CMAKE_EXE_LINKER_FLAGS_COVERAGE": "--coverage",
@@ -203,7 +203,7 @@
       "hidden": true,
       "cacheVariables": {
         "ENABLE_COVERAGE": true,
-        "CMAKE_SKIP_INSTALL_RULES": true,
+        "CMAKE_SKIP_INSTALL_RULES": false,
         "CMAKE_BUILD_TYPE": "Coverage",
         "CMAKE_CXX_FLAGS_COVERAGE": "-Og -g --coverage",
         "CMAKE_EXE_LINKER_FLAGS_COVERAGE": "--coverage",
@@ -231,7 +231,7 @@
       ],
       "description": "This build is only available on Linux",
       "cacheVariables": {
-        "CMAKE_SKIP_INSTALL_RULES": true,
+        "CMAKE_SKIP_INSTALL_RULES": false,
         "CMAKE_BUILD_TYPE": "Sanitize",
         "CMAKE_CONFIGURATION_TYPES": "Sanitize",
         "CMAKE_CXX_FLAGS_SANITIZE":
