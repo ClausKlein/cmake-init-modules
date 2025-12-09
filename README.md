@@ -10,15 +10,15 @@ It is based on [C++20 Modules, CMake, And Shared Libraries](https://crascit.com/
 
 For compiler supported and limitations see [cmake-cxxmodules](https://cmake.org/cmake/help/latest/manual/cmake-cxxmodules.7.html)
 
-# Building and installing
+## Building and installing
 
 See the [BUILDING](BUILDING.md) document.
 
-# Contributing
+## Contributing
 
 See the [CONTRIBUTING](CONTRIBUTING.md) document.
 
-# Licensing
+## Licensing
 
 <!--
 Please go to https://choosealicense.com/licenses/ and choose a license that

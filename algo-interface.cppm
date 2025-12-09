@@ -1,13 +1,17 @@
 module;
 
-#include <string>  // for string
-#include <utility>  // for move
-
 #include <algo_export.h>  // <-- Generated header added to the global fragment
 
-export module algo;  // <-- Annotation not currently required, but see discussion below
+#ifdef HAS_IMPORT_STD
+import std;
+#else
+#  include <string>  // for string
+#  include <utility>  // for move
+#endif
 
-export class ALGO_EXPORT Algo  // <-- ALGO_EXPORT annotation added to the class definition
+export module algo;
+
+export class ALGO_EXPORT Algo
 {
 public:
   explicit Algo(std::string name)

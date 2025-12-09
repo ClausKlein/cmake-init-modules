@@ -1,6 +1,25 @@
 # Building with CMake
 
-## Dependencies
+## Prerequisites
+
+### Install pre-commit and update cmake
+
+```sh
+pipx install cmake
+pipx install pre-commit
+pre-commit install --install-hooks
+```
+
+### Optional install jsonet
+
+```sh
+git clone https://github.com/CertainLach/jrsonnet.git
+cd jrsonnet
+cargo build --release
+cp target/release/jrsonnet $HOME/.local/bin/
+```
+
+## Build Dependencies
 
 For a list of dependencies, please refer to [conanfile.py](conanfile.py).
 
@@ -43,7 +62,7 @@ This project doesn't require any special command-line flags to install to keep
 things simple. As a prerequisite, the project has to be built with the above
 commands already.
 
-The below commands require at least CMake 3.15 to run, because that is the
+The below commands require at least CMake 3.28 to run, because that is the
 version in which [Install a Project][2] was added.
 
 Here is the command for installing the release mode artifacts with a

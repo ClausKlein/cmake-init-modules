@@ -5,6 +5,13 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ develop ]
+  workflow_dispatch:
+  schedule:
+    - cron: "30 15 * * 0"  # Every Sunday at 15:30 UTC
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   clang:
@@ -27,11 +34,16 @@ jobs:
       - name: Setup Cpp
         uses: aminya/setup-cpp@v1
         with:
-          cmake: true
-          ninja: true
+          # compiler: llvm-${{ matrix.version }}
+          cmake: 4.2.0
+          ninja: 1.13.0
+          gcovr: true
 
       - name: Run test suite
         env:
+          # CXX: clang++-${{ matrix.version }}
           CXX: clang++
           PATH: $HOME/.local/bin:$PATH
-        run: make check
+        run: |
+          # export PATH=$HOME/.local/bin:$PATH
+          make check
