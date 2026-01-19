@@ -5,7 +5,6 @@ include(../cmake/prelude.cmake)
 project(cmake-init-modulesExamples LANGUAGES CXX)
 
 if(PROJECT_IS_TOP_LEVEL)
-    # Neither of these two are technically needed, but they make the expectation clear
     include(../cmake/cxx-modules-rules.cmake)
 
     find_package(my_package 0.2.0 EXACT REQUIRED)
@@ -48,6 +47,7 @@ if(NOT PROJECT_IS_TOP_LEVEL AND CMAKE_BUILD_TYPE STREQUAL Release)
             --build-options #
             "-D CMAKE_BUILD_TYPE=$<CONFIG>"
             "-D CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}"
+            "-D CMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}"
             "-D CMAKE_CXX_STDLIB_MODULES_JSON=${CMAKE_CXX_STDLIB_MODULES_JSON}"
             "-D CMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}"
             "-D CMAKE_PREFIX_PATH=${CMAKE_BINARY_DIR}/stagedir"
