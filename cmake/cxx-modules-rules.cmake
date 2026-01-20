@@ -1,10 +1,32 @@
+#
+# A CMake language file to be included as the last step of all project() command calls.
+# This file must be included/used as CMAKE_PROJECT_INCLUDE -> after project()
+#
+
+# ---- In-source guard ----
 include_guard()
 
-# Use modules?
-set(ALGO_USE_MODULES OFF)
+if(NOT PROJECT_NAME)
+    message(FATAL_ERROR "This CMake file has to be included as the last step of all project() command calls!")
+endif()
+
+# Use modules? default NO!
+if(NOT DEFINED ALGO_USE_MODULES)
+    set(ALGO_USE_MODULES OFF)
+endif()
 
 set(CMAKE_SKIP_TEST_ALL_DEPENDENCY OFF)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# gersemi: off
+option(CMAKE_EXPORT_COMPILE_COMMANDS "Prepare run-clang-tidy" ${PROJECT_IS_TOP_LEVEL})
+if(CMAKE_EXPORT_COMPILE_COMMANDS)
+    message(
+        STATUS
+        "CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES=${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES}"
+    )
+    set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
+endif()
+# gersemi: on
 
 # Ensure non-empty default build type for single-config
 get_property(isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
@@ -13,16 +35,19 @@ if(NOT isMultiConfig)
 endif()
 set(CMAKE_DEBUG_POSTFIX _debug)
 
-# This property setting also needs to be consistent between the
-# installed shared library and its consumer, otherwise most
-# toolchains will once again reject the consumer's generated BMI.
+# This property setting also needs to be consistent between the installed shared
+# library and its consumer, otherwise most toolchains will once again reject the
+# consumer's generated BMI.
 if(NOT DEFINED CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 23)
-    set(CMAKE_CXX_EXTENSIONS ON)
-    set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
 
-if(CMAKE_GENERATOR STREQUAL "Ninja")
+# Neither of these two are technically needed, but they make the expectation clear
+set(CMAKE_CXX_EXTENSIONS ON)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# NOTE: only with Ninja generator install of bmi files works yet!
+if(CMAKE_GENERATOR MATCHES "Ninja")
     if(
         CMAKE_CXX_COMPILER_ID STREQUAL "Clang"
         AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 19.0
@@ -61,13 +86,17 @@ if(${CMAKE_CXX_STANDARD} IN_LIST CMAKE_CXX_COMPILER_IMPORT_STD)
 endif()
 
 message(STATUS "ALGO_USE_MODULES=${ALGO_USE_MODULES}")
-message(
-    STATUS
-    "CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES=${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES}"
-)
 
+# Avoid creating CMAKE_..._OUTPUT_DIRECTORY as cache variables, they should not
+# be under the control of the developer. They should be controlled by the
+# project because parts of the project may make assumptions about the relative
+# layout of the binaries. More importantly, leaving them as ordinary variables
+# also means they can be unset within subdirectories where test executables are
+# defined, allowing them to avoid being collected with the other main binaries
+# and cluttering up that area.
 set(stageDir ${CMAKE_CURRENT_BINARY_DIR}/stagedir)
 include(GNUInstallDirs)
+
 if(NOT CMAKE_RUNTIME_OUTPUT_DIRECTORY)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${stageDir}/${CMAKE_INSTALL_BINDIR})
 endif()

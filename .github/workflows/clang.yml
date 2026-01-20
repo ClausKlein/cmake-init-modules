@@ -35,7 +35,7 @@ jobs:
         uses: aminya/setup-cpp@v1
         with:
           # compiler: llvm-${{ matrix.version }}
-          cmake: 4.2.0
+          cmake: 4.2.2
           ninja: 1.13.0
           gcovr: true
 

@@ -1,3 +1,7 @@
+#
+# This file must be included/used as CMAKE_PROJECT_TOP_LEVEL_INCLUDES -> before project() is called!
+#
+
 # ---- In-source guard ----
 include_guard()
 
@@ -10,15 +14,43 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
     )
 endif()
 
+if(PROJECT_NAME)
+    message(FATAL_ERROR "This CMake file has to be included before first project() command call!")
+endif()
+
 # gersemi: off
-if(CMAKE_VERSION VERSION_EQUAL 4.2)
+# ---------------------------------------------------------------------------
+# use ccache if found
+# ---------------------------------------------------------------------------
+find_program(CCACHE_EXECUTABLE "ccache" HINTS /usr/local/bin /opt/local/bin)
+if(CCACHE_EXECUTABLE)
+    message(STATUS "use ccache")
+    set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_EXECUTABLE}" CACHE PATH "ccache")
+    set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_EXECUTABLE}" CACHE PATH "ccache")
+endif()
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
+
+# ---------------------------------------------------------------------------
+# check if import std; is supported by CMAKE_CXX_COMPILER
+# ---------------------------------------------------------------------------
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2)
     set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
 endif()
 # gersemi: on
 
-if($ENV{CXX} MATCHES "clang" OR CMAKE_CXX_COMPILER MATCHES "clang")
+if("$ENV{CXX}" STREQUAL "")
+    message(WARNING "\$CXX is not set")
+    # if(UNIX)
+    #     set(ENV{CXX} clang++)
+    # else()
+    #     set(ENV{CXX} cl)
+    # endif()
+endif()
+
+if(CMAKE_VERSION VERSION_GREATER 4.1 AND ("$ENV{CXX}" MATCHES "clang" OR CMAKE_CXX_COMPILER MATCHES "clang"))
+    # NOTE: Always use libc++
     # see https://releases.llvm.org/19.1.0/projects/libcxx/docs/index.html
-    # Always use libc++
     set(ENV{CXXFLAGS} -stdlib=libc++)
     message(STATUS "CXXFLAGS=-stdlib=libc++")
 
@@ -39,7 +71,7 @@ if($ENV{CXX} MATCHES "clang" OR CMAKE_CXX_COMPILER MATCHES "clang")
         set(CMAKE_CXX_STDLIB_MODULES_JSON
             ${LLVM_DIR}/lib/c++/libc++.modules.json
         )
-    elseif(LINUX AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 21.0)
+    elseif(LINUX)
         execute_process(
             OUTPUT_VARIABLE LLVM_MODULES
             COMMAND clang++ -print-file-name=c++/libc++.modules.json
@@ -56,6 +88,10 @@ if($ENV{CXX} MATCHES "clang" OR CMAKE_CXX_COMPILER MATCHES "clang")
     endif()
 
     if(EXISTS ${CMAKE_CXX_STDLIB_MODULES_JSON})
+        message(
+            STATUS
+            "CMAKE_CXX_STDLIB_MODULES_JSON=${CMAKE_CXX_STDLIB_MODULES_JSON}"
+        )
         # gersemi: off
         set(CACHE{CMAKE_CXX_STDLIB_MODULES_JSON}
             TYPE FILEPATH
@@ -63,5 +99,10 @@ if($ENV{CXX} MATCHES "clang" OR CMAKE_CXX_COMPILER MATCHES "clang")
             VALUE ${CMAKE_CXX_STDLIB_MODULES_JSON}
         )
         # gersemi: on
+    else()
+        message(
+            WARNING
+            "File does NOT EXISTS! ${CMAKE_CXX_STDLIB_MODULES_JSON}"
+        )
     endif()
 endif()

@@ -9,25 +9,28 @@ MAKEFLAGS+= --no-builtin-rules  # Disable the built-in implicit rules.
 export hostSystemName=$(shell uname)
 
 ifeq (${hostSystemName},Darwin)
-  export LLVM_PREFIX=$(shell brew --prefix llvm)
-  export LLVM_DIR=$(shell realpath ${LLVM_PREFIX})
+  export LLVM_PREFIX:=$(shell brew --prefix llvm)
+  export LLVM_DIR:=$(shell realpath ${LLVM_PREFIX})
   export PATH:=${LLVM_DIR}/bin:${PATH}
 
-  export CMAKE_CXX_STDLIB_MODULES_JSON=${LLVM_DIR}/lib/c++/libc++.modules.json
+  ### export CMAKE_CXX_STDLIB_MODULES_JSON=${LLVM_DIR}/lib/c++/libc++.modules.json
   export CXX=clang++
-  export LDFLAGS=-L$(LLVM_DIR)/lib/c++ -lc++abi -lc++ # -lc++experimental
+  # export LDFLAGS=-L$(LLVM_DIR)/lib/c++ -lc++abi # XXX -lc++ # NO! -lc++experimental
   export GCOV="llvm-cov gcov"
 
   ### TODO: to test g++-15:
-  export GCC_PREFIX=$(shell brew --prefix gcc)
-  export GCC_DIR=$(shell realpath ${GCC_PREFIX})
+  export GCC_PREFIX:=$(shell brew --prefix gcc)
+  export GCC_DIR:=$(shell realpath ${GCC_PREFIX})
 
-  # export CMAKE_CXX_STDLIB_MODULES_JSON=${GCC_DIR}/lib/gcc/current/libstdc++.modules.json
-  # export CXX:=g++-15
-  # export CXXFLAGS:=-stdlib=libstdc++
+  ### export CMAKE_CXX_STDLIB_MODULES_JSON:=${GCC_DIR}/lib/gcc/current/libstdc++.modules.json
+  # export CXX=g++-15
+  # export CXXFLAGS=-stdlib=libstdc++
   # export GCOV="gcov"
+
+  ### XXX: to test appleclang
+  # export CXX=/usr/bin/c++
 else ifeq (${hostSystemName},Linux)
-  # export LLVM_DIR=/usr/lib/llvm-20
+  # export LLVM_DIR:=/usr/lib/llvm-20
   # export PATH:=${LLVM_DIR}/bin:${PATH}
   # export CXX=clang++-20
 endif
@@ -36,14 +39,14 @@ CONAN_HOME=$(shell conan config home)
 # BUILD_TYPE=Release
 BUILD_TYPE=Debug
 
-.PHONY: all clean distclean check test
+.PHONY: all clean distclean check test format citest
 
 all: .init # XXX clean # NO! conan
 	cmake --workflow --preset dev
 	# TODO(CK): gcovr -v
 
 check: all
-	-run-clang-tidy -p build/dev
+	-run-clang-tidy
 
 .init: .CMakeUserPresets.json GNUmakefile
 	-pipx ensurepath
@@ -67,9 +70,21 @@ clean:
 	rm -rf build example/build
 
 distclean: clean
-	rm -rf conan stagedir .init CMakeUserPresets.json tags
+	rm -rf conan stagedir .init CMakeUserPresets.json tags compile_commands.json
 	find . -name '*~' -delete
 	# XXX NO! git clean -xdf
+
+citest: distclean
+	cmake --preset ci-Darwin # XXX --log-level=VERBOSE --fresh
+	ninja -C build
+	ctest --test-dir build --verbose
+	cd build && cmake -L . && cd ..
+	ln -fs build/compile_commands.json .
+	@echo 'run-clang-tidy *.cpp example'
+
+format:
+	-pre-commit autoupdate
+	pre-commit run --all
 
 GNUmakefile :: ;
 *.txt :: ;

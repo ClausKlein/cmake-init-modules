@@ -1,6 +1,10 @@
 module;
 
-#include <print>
+#ifdef HAS_IMPORT_STD
+import std;
+#else
+#  include <print>
+#endif
 
 module algo;
 

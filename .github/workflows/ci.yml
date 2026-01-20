@@ -65,7 +65,7 @@ jobs:
         vcvarsall: ${{ contains(matrix.os, 'windows') }}
         clangformat: true
         clangtidy: true
-        cmake: 4.2.0
+        cmake: 4.2.2
         ninja: 1.13.0
         gcovr: true
 
@@ -110,7 +110,7 @@ jobs:
         vcvarsall: ${{ contains(matrix.os, 'windows') }}
         clangformat: true
         clangtidy: true
-        cmake: 4.2.0
+        cmake: 4.2.2
         ninja: 1.13.0
         gcovr: true
 
@@ -179,7 +179,7 @@ jobs:
         vcvarsall: ${{ contains(matrix.os, 'windows') }}
         clangformat: true
         clangtidy: true
-        cmake: 4.2.0
+        cmake: 4.2.2
         ninja: 1.13.0
         gcovr: true
 
