@@ -1,3 +1,7 @@
+#
+# This file must be included/used as CMAKE_PROJECT_TOP_LEVEL_INCLUDES -> before project() is called!
+#
+
 # ---- In-source guard ----
 include_guard()
 
@@ -8,6 +12,10 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
         "Please read the BUILDING document before trying to build this project. "
         "You may need to delete 'CMakeCache.txt' and 'CMakeFiles/' first."
     )
+endif()
+
+if(PROJECT_NAME)
+    message(FATAL_ERROR "This CMake file has to be included before first project() command call!")
 endif()
 
 # gersemi: off

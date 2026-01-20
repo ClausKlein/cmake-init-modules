@@ -22,6 +22,8 @@ if(ALGO_USE_MODULES)
     add_executable(app main.cpp)
     target_link_libraries(app PRIVATE my_package::Algo)
     add_test(NAME app-tests COMMAND app)
+else()
+    message(FATAL_ERROR "Missing support for CXX_MODULES!")
 endif()
 
 if(NOT PROJECT_IS_TOP_LEVEL AND CMAKE_BUILD_TYPE STREQUAL Release)

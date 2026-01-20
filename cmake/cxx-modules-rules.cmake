@@ -1,7 +1,19 @@
+#
+# A CMake language file to be included as the last step of all project() command calls.
+# This file must be included/used as CMAKE_PROJECT_INCLUDE -> after project()
+#
+
+# ---- In-source guard ----
 include_guard()
 
+if(NOT PROJECT_NAME)
+    message(FATAL_ERROR "This CMake file has to be included as the last step of all project() command calls!")
+endif()
+
 # Use modules? default NO!
-set(ALGO_USE_MODULES OFF)
+if(NOT DEFINED ALGO_USE_MODULES)
+    set(ALGO_USE_MODULES OFF)
+endif()
 
 set(CMAKE_SKIP_TEST_ALL_DEPENDENCY OFF)
 
@@ -12,8 +24,7 @@ if(CMAKE_EXPORT_COMPILE_COMMANDS)
         STATUS
         "CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES=${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES}"
     )
-    set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES}
-    )
+    set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
 endif()
 # gersemi: on
 

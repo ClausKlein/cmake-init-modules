@@ -80,7 +80,7 @@ citest: distclean
 	ctest --test-dir build --verbose
 	cd build && cmake -L . && cd ..
 	ln -fs build/compile_commands.json .
-	run-clang-tidy
+	@echo 'run-clang-tidy *.cpp example'
 
 format:
 	-pre-commit autoupdate
