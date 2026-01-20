@@ -34,7 +34,7 @@ target_compile_features(Algo PUBLIC cxx_std_23)
 if(CMAKE_CXX_MODULE_STD)
     target_compile_definitions(Algo PUBLIC HAS_IMPORT_STD)
 else()
-    message(FATAL_ERROR "Missing support for CMAKE_CXX_MODULE_STD!")
+    message(WARNING "Missing support for CMAKE_CXX_MODULE_STD!")
 endif()
 
 # XXX target_link_libraries(Algo PUBLIC $<BUILD_INTERFACE:a4z::commonCompilerWarnings>)
