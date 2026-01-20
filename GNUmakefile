@@ -13,16 +13,16 @@ ifeq (${hostSystemName},Darwin)
   export LLVM_DIR:=$(shell realpath ${LLVM_PREFIX})
   export PATH:=${LLVM_DIR}/bin:${PATH}
 
-  export CMAKE_CXX_STDLIB_MODULES_JSON=${LLVM_DIR}/lib/c++/libc++.modules.json
+  ### export CMAKE_CXX_STDLIB_MODULES_JSON=${LLVM_DIR}/lib/c++/libc++.modules.json
   export CXX=clang++
-  export LDFLAGS=-L$(LLVM_DIR)/lib/c++ -lc++abi # XXX -lc++ # NO! -lc++experimental
+  # export LDFLAGS=-L$(LLVM_DIR)/lib/c++ -lc++abi # XXX -lc++ # NO! -lc++experimental
   export GCOV="llvm-cov gcov"
 
   ### TODO: to test g++-15:
   export GCC_PREFIX:=$(shell brew --prefix gcc)
   export GCC_DIR:=$(shell realpath ${GCC_PREFIX})
 
-# export CMAKE_CXX_STDLIB_MODULES_JSON:=${GCC_DIR}/lib/gcc/current/libstdc++.modules.json
+  ### export CMAKE_CXX_STDLIB_MODULES_JSON:=${GCC_DIR}/lib/gcc/current/libstdc++.modules.json
   # export CXX=g++-15
   # export CXXFLAGS=-stdlib=libstdc++
   # export GCOV="gcov"

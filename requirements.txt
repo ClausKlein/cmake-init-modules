@@ -6,7 +6,7 @@ Pygments
 black
 builddriver
 cmake-init>=0.41.1
-cmake>=4.2.1
+cmake>=4.2.2
 codespell>=2.4.1
 conan>=2.24.0
 gcovr>=8.6
